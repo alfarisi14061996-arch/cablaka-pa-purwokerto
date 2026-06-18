@@ -111,15 +111,94 @@ const S = {
   userAvatar: { width:26, height:26, borderRadius:"50%", background:"#c9a84c", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13 },
 
   // login
-  loginScreen: { minHeight:"calc(100vh - 60px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24, background:"linear-gradient(160deg,#0d2b1e,#0f3320,#1a3a28)" },
-  loginWrap: { width:"100%", maxWidth:440 },
-  bigLogo: { width:110, height:110, borderRadius:"50%", overflow:"hidden", display:"inline-flex", alignItems:"center", justifyContent:"center", marginBottom:16, boxShadow:"0 8px 32px rgba(201,168,76,.4)", background:"white" },
-  loginCard: { background:"rgba(255,255,255,.07)", border:"1px solid rgba(255,255,255,.12)", borderRadius:16, padding:28 },
-  loginLabel: { display:"block", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:.5, color:"#9ae6b4", marginBottom:6 },
-  loginSelect: { width:"100%", padding:"10px 12px", borderRadius:8, border:"1.5px solid rgba(255,255,255,.2)", background:"rgba(255,255,255,.08)", color:"#fff", fontFamily:"inherit", fontSize:14, marginBottom:14, outline:"none" },
-  loginInput: { width:"100%", padding:"10px 40px 10px 12px", borderRadius:8, border:"1.5px solid rgba(255,255,255,.2)", background:"rgba(255,255,255,.08)", color:"#fff", fontFamily:"inherit", fontSize:14, outline:"none" },
-  loginBtn: { width:"100%", padding:11, background:"#c9a84c", color:"#fff", border:"none", borderRadius:8, fontSize:14, fontWeight:700, cursor:"pointer", marginTop:14 },
-  loginErr: { color:"#fc8181", fontSize:12, marginTop:10, textAlign:"center" },
+ // login
+loginScreen: {
+  minHeight:"calc(100vh - 60px)",
+  display:"flex",
+  alignItems:"center",
+  justifyContent:"center",
+  padding:24,
+  background:"linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)"
+},
+
+loginWrap:{
+  width:"100%",
+  maxWidth:460
+},
+
+bigLogo:{
+  width:120,
+  height:120,
+  borderRadius:"50%",
+  overflow:"hidden",
+  display:"inline-flex",
+  alignItems:"center",
+  justifyContent:"center",
+  marginBottom:18,
+  background:"#fff",
+  boxShadow:"0 15px 40px rgba(0,0,0,.25)"
+},
+
+loginCard:{
+  background:"rgba(255,255,255,.12)",
+  backdropFilter:"blur(16px)",
+  WebkitBackdropFilter:"blur(16px)",
+  border:"1px solid rgba(255,255,255,.25)",
+  borderRadius:24,
+  padding:32,
+  boxShadow:"0 25px 50px rgba(0,0,0,.25)"
+},
+
+loginLabel:{
+  display:"block",
+  fontSize:12,
+  fontWeight:700,
+  color:"#fff",
+  marginBottom:8
+},
+
+loginSelect:{
+  width:"100%",
+  padding:"14px",
+  borderRadius:12,
+  border:"1px solid rgba(255,255,255,.2)",
+  background:"rgba(255,255,255,.15)",
+  color:"#fff",
+  fontSize:14,
+  marginBottom:16,
+  outline:"none"
+},
+
+loginInput:{
+  width:"100%",
+  padding:"14px 44px 14px 14px",
+  borderRadius:12,
+  border:"1px solid rgba(255,255,255,.2)",
+  background:"rgba(255,255,255,.15)",
+  color:"#fff",
+  fontSize:14,
+  outline:"none"
+},
+
+loginBtn:{
+  width:"100%",
+  padding:"14px",
+  border:"none",
+  borderRadius:12,
+  background:"linear-gradient(135deg,#f59e0b,#d97706)",
+  color:"#fff",
+  fontWeight:700,
+  fontSize:15,
+  cursor:"pointer",
+  marginTop:18
+},
+
+loginErr:{
+  color:"#fecaca",
+  fontSize:12,
+  marginTop:10,
+  textAlign:"center"
+},
 
   // main layout
   layout: { display:"flex", height:"calc(100vh - 60px)", overflow:"clip" },
@@ -665,11 +744,44 @@ export default function App() {
 
       {/* LOGIN */}
       {!user && <div style={S.loginScreen}>
-        <div style={S.loginWrap}>
-          <div style={{textAlign:"center",marginBottom:32}}>
-            <div style={S.bigLogo}><img src={LOGO_SRC} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="CABLAKA"/></div>
-            <h1 style={{fontSize:30,fontWeight:800,color:"#fff",letterSpacing:-1}}>CABLA<span style={{color:"#c9a84c"}}>KA</span></h1>
-            <p style={{fontSize:12,color:"#9ae6b4",marginTop:6}}>Catatan Berkas Layanan Keluar Kantor · Pengadilan Agama Purwokerto</p>
+      <div style={{textAlign:"center",marginBottom:30}}>
+  <div style={S.bigLogo}>
+    <img
+      src={LOGO_SRC}
+      alt="Logo"
+      style={{
+        width:"100%",
+        height:"100%",
+        objectFit:"contain"
+      }}
+    />
+  </div>
+
+  <h1 style={{
+    color:"#fff",
+    fontSize:38,
+    fontWeight:900,
+    margin:0
+  }}>
+    CABLAKA
+  </h1>
+
+  <div style={{
+    color:"#dbeafe",
+    marginTop:8,
+    fontSize:14
+  }}>
+    Catatan Berkas Layanan Keluar Kantor
+  </div>
+
+  <div style={{
+    color:"#bfdbfe",
+    marginTop:4,
+    fontSize:12
+  }}>
+    Pengadilan Agama Purwokerto
+  </div>
+</div>
           </div>
           <div style={S.loginCard}>
             <h3 style={{fontSize:14,fontWeight:700,color:"#fff",marginBottom:18}}>🔐 Masuk ke Sistem</h3>
