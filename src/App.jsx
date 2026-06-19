@@ -128,10 +128,19 @@ const S = {
 
   // main layout
   layout: { display:"flex", height:"calc(100vh - 60px)", overflow:"clip" },
-  sidebar: { width:210, flexShrink:0, background:"#fff", borderRight:"1px solid #e2e8f0", display:"flex", flexDirection:"column", padding:"12px 8px", gap:3, overflowY:"auto" },
-  sidebarLabel: { fontSize:10, fontWeight:700, textTransform:"uppercase", letterSpacing:1.2, color:"#718096", padding:"10px 10px 4px" },
-  sidebarBtn: (active) => ({ display:"flex", alignItems:"center", gap:10, padding:"9px 12px", border:"none", borderRadius:8, background: active ? "#f0fff4" : "transparent", color: active ? "#276749" : "#2d3748", fontWeight: active ? 700 : 500, fontSize:13, fontFamily:"inherit", cursor:"pointer", textAlign:"left", width:"100%" }),
-  sbBadge: { marginLeft:"auto", background:"#c9a84c", color:"#fff", fontSize:10, fontWeight:700, padding:"1px 7px", borderRadius:99 },
+  sidebar: { width:228, flexShrink:0, background:"linear-gradient(180deg,#15351f,#1a4731 55%,#173d28)", borderRight:"1px solid rgba(0,0,0,.2)", display:"flex", flexDirection:"column", padding:"18px 12px", gap:4, overflowY:"auto", boxShadow:"2px 0 16px rgba(0,0,0,.12)" },
+  sidebarLabel: { fontSize:10.5, fontWeight:800, textTransform:"uppercase", letterSpacing:1.6, color:"rgba(154,230,180,.55)", padding:"4px 10px 10px" },
+  sidebarBtn: (active) => ({
+    display:"flex", alignItems:"center", gap:11, padding:"10px 12px", border:"none",
+    borderRadius:10, fontFamily:"inherit", cursor:"pointer", textAlign:"left", width:"100%",
+    position:"relative", transition:"background .18s, color .18s, transform .12s",
+    background: active ? "linear-gradient(135deg,#d9b85c,#c9a84c)" : "transparent",
+    color: active ? "#1a2e1f" : "rgba(255,255,255,.82)",
+    fontWeight: active ? 800 : 600, fontSize:13.5,
+    boxShadow: active ? "0 6px 16px -4px rgba(201,168,76,.55)" : "none",
+  }),
+  sbBadge: { marginLeft:"auto", background:"#e53e3e", color:"#fff", fontSize:10, fontWeight:800, padding:"1px 7px", borderRadius:99, boxShadow:"0 0 0 2px rgba(255,255,255,.15)" },
+  sidebarDivider: { height:1, background:"rgba(255,255,255,.1)", margin:"10px 4px" },
   content: { flex:1, overflowY:"auto", padding:24 },
 
   // cards
@@ -575,12 +584,15 @@ export default function App() {
       </Card>
     );
 
-    if (tab === "semua") return (
-      <Card title="📋 Semua Pengajuan" right={<RefreshBtn onClick={refreshData}/>} noPad>
-        {!db.izin.length ? <EmptyState icon="📭" msg="Belum ada data"/> :
+    if (tab === "semua") {
+      // Admin boleh lihat semua data. Atasan hanya boleh lihat pengajuan yang diajukan ke dirinya sendiri.
+      const dataSemua = user.role === "admin" ? db.izin : db.izin.filter(x=>x.atasanId===user.id);
+      return (
+      <Card title={user.role==="admin" ? "📋 Semua Pengajuan" : "📋 Semua Pengajuan ke Saya"} right={<RefreshBtn onClick={refreshData}/>} noPad>
+        {!dataSemua.length ? <EmptyState icon="📭" msg="Belum ada data"/> :
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
           <thead><tr><Th>#</Th><Th>Nama</Th><Th>Tanggal</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th><Th>Diajukan ke</Th><Th>Status</Th><Th>Aksi</Th></tr></thead>
-          <tbody>{db.izin.map((x,i)=>{
+          <tbody>{dataSemua.map((x,i)=>{
             const at=USERS.find(u=>u.id===x.atasanId);
             return <tr key={x.id}>
               <Td mono>{String(i+1).padStart(2,"0")}</Td>
@@ -598,7 +610,7 @@ export default function App() {
           })}</tbody>
         </table></div>}
       </Card>
-    );
+    );}
 
     if (tab === "dashboard") {
       const todayStr = today();
@@ -725,14 +737,15 @@ export default function App() {
         <nav style={S.sidebar}>
           <div style={S.sidebarLabel}>Menu</div>
           {tabs.map(t=>(
-            <button key={t.key} style={S.sidebarBtn(tab===t.key)} onClick={()=>setTab(t.key)}>
-              <span style={{fontSize:16,width:22,textAlign:"center"}}>{t.icon}</span>
+            <button key={t.key} className={tab===t.key?"sb-btn-active":"sb-btn"} style={S.sidebarBtn(tab===t.key)} onClick={()=>setTab(t.key)}>
+              <span style={{fontSize:17,width:24,textAlign:"center",filter: tab===t.key?"none":"grayscale(.15)"}}>{t.icon}</span>
               {t.label}
               {t.badge>0 && <span style={S.sbBadge}>{t.badge}</span>}
             </button>
           ))}
           <div style={{flex:1}}/>
-          <button style={{...S.sidebarBtn(false),color:"#c53030"}} onClick={logout}><span style={{fontSize:16,width:22,textAlign:"center"}}>🔓</span>Keluar</button>
+          <div style={S.sidebarDivider}/>
+          <button className="sb-btn sb-btn-danger" style={{...S.sidebarBtn(false),color:"#feb2b2"}} onClick={logout}><span style={{fontSize:17,width:24,textAlign:"center"}}>🔓</span>Keluar</button>
         </nav>
 
         {/* CONTENT */}
@@ -793,6 +806,10 @@ export default function App() {
         .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -6px rgba(201,168,76,.65);}
         .login-btn:active{transform:translateY(0);}
         .login-card{transition:box-shadow .25s, transform .25s;}
+        .sb-btn:hover{background:rgba(255,255,255,.1)!important;color:#fff!important;transform:translateX(2px);}
+        .sb-btn:active{transform:translateX(0) scale(.98);}
+        .sb-btn-active:hover{transform:translateX(2px);filter:brightness(1.05);}
+        .sb-btn-danger:hover{background:rgba(229,62,62,.18)!important;color:#fff!important;}
       `}</style>
     </div>
   );
