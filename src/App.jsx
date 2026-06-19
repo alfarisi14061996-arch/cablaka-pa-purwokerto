@@ -392,7 +392,7 @@ export default function App() {
     }
     printEl.innerHTML = `<div style="padding:36px 48px;font-family:'Times New Roman',Times,serif;font-size:13px;line-height:1.55;color:#000;">
       <div style="display:flex;align-items:flex-start;gap:14px;">
-        <img src="${LOGO_PA_SRC}" style="width:68px;height:auto;flex-shrink:0;margin-top:2px;" alt="logo"/>
+        <img src="${LOGO_PA_SRC}" style="width:102px;height:auto;flex-shrink:0;margin-top:2px;" alt="logo"/>
         <div style="flex:1;text-align:center;">
           <p style="margin:0;font-weight:700;font-size:13px;">MAHKAMAH AGUNG REPUBLIK INDONESIA</p>
           <p style="margin:0;font-weight:700;font-size:13px;">DIREKTORAT JENDERAL BADAN PERADILAN AGAMA</p>
