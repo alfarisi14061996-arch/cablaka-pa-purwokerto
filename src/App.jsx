@@ -378,7 +378,13 @@ export default function App() {
     if (!x || x.status !== "disetujui") { addToast("Hanya izin yang disetujui yang dapat dicetak.", true); return; }
     const at = USERS.find(u => u.id === x.atasanId);
     const tglSlash = (s) => { if (!s) return "-"; const [y,m,d] = s.split("-"); return `${d}/${m}/${y}`; };
-    const printEl = document.getElementById("print-area");
+    let printEl = document.getElementById("print-area");
+    if (!printEl) {
+      printEl = document.createElement("div");
+      printEl.id = "print-area";
+      printEl.style.display = "none";
+      document.body.appendChild(printEl);
+    }
     printEl.innerHTML = `<div style="padding:36px 48px;font-family:'Times New Roman',Times,serif;font-size:13px;line-height:1.55;color:#000;">
       <div style="display:flex;align-items:flex-start;gap:14px;">
         <img src="${LOGO_SRC}" style="width:68px;height:auto;flex-shrink:0;margin-top:2px;" alt="logo"/>
@@ -773,8 +779,7 @@ export default function App() {
         </div>
       )}
 
-      {/* PRINT AREA */}
-      <div id="print-area" style={{display:"none"}}/>
+      {/* PRINT AREA: dibuat dinamis langsung di document.body via cetakSurat() agar tidak bersarang di dalam wrapper aplikasi */}
       <style>{`*{box-sizing:border-box;}@media print{body>*:not(#print-area){display:none!important;}#print-area{display:block!important;position:absolute;left:0;top:0;width:100%;}}
         @keyframes loginFadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
         .login-fade{animation:loginFadeIn .55s ease both;}
