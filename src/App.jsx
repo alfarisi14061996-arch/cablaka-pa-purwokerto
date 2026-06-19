@@ -244,6 +244,19 @@ const EmptyState = ({ icon, msg }) => (
 const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}>🔄 Refresh</Btn>;
 
 export default function App() {
+  // Set favicon & title tab browser ke logo/identitas CABLAKA (bukan logo default)
+  useEffect(() => {
+    document.title = "CABLAKA - Catatan Berkas Layanan Keluar Kantor";
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/jpeg";
+    link.href = LOGO_SRC;
+  }, []);
+
   const [user, setUser] = useState(null);
   const [db, setDb] = useState({ izin: [] });
   const [tab, setTab] = useState("");
