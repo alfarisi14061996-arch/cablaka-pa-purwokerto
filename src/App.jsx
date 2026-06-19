@@ -377,100 +377,47 @@ export default function App() {
     const x = db.izin.find(i => i.id === id);
     if (!x || x.status !== "disetujui") { addToast("Hanya izin yang disetujui yang dapat dicetak.", true); return; }
     const at = USERS.find(u => u.id === x.atasanId);
-    const noSurat = `PA-Pwt/${String(x.id).slice(-4)}/${new Date(x.createdAt).getFullYear()}`;
+    const tglSlash = (s) => { if (!s) return "-"; const [y,m,d] = s.split("-"); return `${d}/${m}/${y}`; };
     const printEl = document.getElementById("print-area");
-    const tglSurat = x.tanggal.split("-").reverse().join("/");
-printEl.innerHTML = `
-<div style="padding:40px;font-family:'Times New Roman',serif;font-size:14px;line-height:1.7">
-
-  <div style="text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:20px">
-    <div style="font-size:18px;font-weight:bold">
-      MAHKAMAH AGUNG REPUBLIK INDONESIA
-    </div>
-    <div style="font-size:16px;font-weight:bold">
-      DIREKTORAT JENDERAL BADAN PERADILAN AGAMA
-    </div>
-    <div style="font-size:16px;font-weight:bold">
-      PENGADILAN AGAMA PURWOKERTO
-    </div>
-    <div>
-      JL. Gerilya No.7A Purwokerto
-    </div>
-  </div>
-
-  <h3 style="text-align:center;text-decoration:underline;margin-bottom:25px">
-    SURAT IZIN KELUAR KANTOR
-  </h3>
-
-  <p>Yang bertanda tangan di bawah ini :</p>
-
-  <table style="margin-left:20px">
-    <tr>
-      <td>Nama</td>
-      <td>: ${at?.nama || "-"}</td>
-    </tr>
-    <tr>
-      <td>NIP</td>
-      <td>: ${at?.nip || "-"}</td>
-    </tr>
-    <tr>
-      <td>Jabatan</td>
-      <td>: ${at?.jabatan || "-"}</td>
-    </tr>
-  </table>
-
-  <p style="margin-top:20px">
-    Dengan ini memberikan izin kepada :
-  </p>
-
-  <table style="margin-left:20px">
-    <tr>
-      <td>Nama</td>
-      <td>: ${x.pegawaiNama}</td>
-    </tr>
-    <tr>
-      <td>NIP</td>
-      <td>: ${x.pegawaiNip}</td>
-    </tr>
-    <tr>
-      <td>Jabatan</td>
-      <td>: ${x.pegawaiJabatan}</td>
-    </tr>
-    <tr>
-      <td>Tanggal</td>
-      <td>: ${tglSurat}</td>
-    </tr>
-    <tr>
-      <td>Jam</td>
-      <td>: ${x.jamKeluar} - ${x.jamKembali}</td>
-    </tr>
-    <tr>
-      <td>Keperluan</td>
-      <td>: ${x.keperluan}</td>
-    </tr>
-    <tr>
-      <td>Keterangan</td>
-      <td>: ${x.keterangan || x.tujuan || "-"}</td>
-    </tr>
-  </table>
-
-  <p style="margin-top:25px">
-    Demikian surat izin ini diberikan kepada yang bersangkutan untuk digunakan sebagaimana mestinya.
-  </p>
-
-  <div style="width:300px;margin-left:auto;margin-top:30px;text-align:center">
-    <div>Purwokerto, ${tglSurat}</div>
-    <div style="margin-top:10px">${at?.jabatan || "Atasan"}</div>
-
-    <div style="height:80px"></div>
-
-    <div style="font-weight:bold;text-decoration:underline">
-      ${at?.nama || "-"}
-    </div>
-    <div>NIP. ${at?.nip || "-"}</div>
-  </div>
-</div>
-`;
+    printEl.innerHTML = `<div style="padding:36px 48px;font-family:'Times New Roman',Times,serif;font-size:13px;line-height:1.55;color:#000;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <img src="${LOGO_SRC}" style="width:68px;height:auto;flex-shrink:0;margin-top:2px;" alt="logo"/>
+        <div style="flex:1;text-align:center;">
+          <p style="margin:0;font-weight:700;font-size:13px;">MAHKAMAH AGUNG REPUBLIK INDONESIA</p>
+          <p style="margin:0;font-weight:700;font-size:13px;">DIREKTORAT JENDERAL BADAN PERADILAN AGAMA</p>
+          <p style="margin:0;font-weight:700;font-size:13px;">PENGADILAN TINGGI AGAMA SEMARANG</p>
+          <p style="margin:0;font-weight:700;font-size:16px;">PENGADILAN AGAMA PURWOKERTO</p>
+          <p style="margin:5px 0 0;font-weight:700;font-size:11px;">JL. Gerilya NO. 7A Purwokerto &ndash; 53143 TELP. 0281-636366 FAX. 0281-643289</p>
+          <p style="margin:1px 0 0;font-weight:700;font-size:11px;">website : http://www.pa-purwokerto.go.id email : pa.purwokerto@gmail.com</p>
+        </div>
+      </div>
+      <div style="border-bottom:3px double #000;margin:8px 0 20px;"></div>
+      <div style="text-align:center;margin-bottom:22px;"><span style="font-weight:700;text-decoration:underline;font-size:14px;text-transform:uppercase;">Surat Izin Keluar Kantor</span></div>
+      <p style="margin:0 0 6px;">Yang bertanda tangan di bawah ini:</p>
+      <table style="margin:0 0 12px 24px;border-collapse:collapse;">
+        <tr><td style="width:110px;padding:1px 0;">Nama</td><td style="width:14px;">:</td><td>${at?.nama||"—"}</td></tr>
+        <tr><td style="padding:1px 0;">NIP</td><td>:</td><td>${at?.nip||"—"}</td></tr>
+        <tr><td style="padding:1px 0;">Jabatan</td><td>:</td><td>${at?.jabatan||"—"}</td></tr>
+      </table>
+      <p style="margin:0 0 6px;">Dengan ini memberikan izin kepada</p>
+      <table style="margin:0 0 12px 24px;border-collapse:collapse;">
+        <tr><td style="width:110px;padding:1px 0;">Nama</td><td style="width:14px;">:</td><td>${x.pegawaiNama}</td></tr>
+        <tr><td style="padding:1px 0;">NIP</td><td>:</td><td>${x.pegawaiNip}</td></tr>
+        <tr><td style="padding:1px 0;">Jabatan</td><td>:</td><td>${x.pegawaiJabatan}</td></tr>
+        <tr><td style="padding:1px 0;">Tanggal</td><td>:</td><td>${tglSlash(x.tanggal)}</td></tr>
+        <tr><td style="padding:1px 0;">Jam</td><td>:</td><td>${x.jamKeluar} - ${x.jamKembali}</td></tr>
+        <tr><td style="padding:1px 0;">Keperluan</td><td>:</td><td>${x.keperluan}</td></tr>
+        <tr><td style="padding:1px 0;">Keterangan</td><td>:</td><td>${x.keterangan||"-"}</td></tr>
+      </table>
+      <p style="margin:14px 0 0;">Demikian surat izin ini diberikan kepada yang bersangkutan untuk digunakan semestinya.</p>
+      <div style="display:flex;justify-content:flex-end;margin-top:28px;">
+        <div style="text-align:left;min-width:220px;">
+          <p style="margin:0;">Purwokerto, ${tglSlash(x.tanggal)}</p>
+          <p style="margin:0;">${at?.jabatan||"Pimpinan"},</p>
+          <div style="height:64px;"></div>
+          <p style="margin:0;font-weight:700;">${at?.nama||"—"}</p>
+        </div>
+      </div>
     </div>`;
     setTimeout(() => window.print(), 300);
   };
