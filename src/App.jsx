@@ -111,20 +111,28 @@ const S = {
   userPill: { display:"flex", alignItems:"center", gap:8, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:99, padding:"5px 14px 5px 7px", cursor:"pointer" },
   userAvatar: { width:26, height:26, borderRadius:"50%", background:"#c9a84c", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13 },
 
-  // login
-  loginScreen: { minHeight:"calc(100vh - 60px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24, position:"relative", overflow:"hidden", background:"radial-gradient(circle at 15% 20%, #173d28 0%, transparent 45%), radial-gradient(circle at 85% 80%, #2a4a30 0%, transparent 45%), linear-gradient(160deg,#0a2318,#0f3320,#15351f)" },
-  loginOrbGold: { position:"absolute", width:320, height:320, borderRadius:"50%", background:"radial-gradient(circle, rgba(201,168,76,.35), transparent 70%)", top:-80, right:-80, filter:"blur(10px)", pointerEvents:"none" },
-  loginOrbGreen: { position:"absolute", width:260, height:260, borderRadius:"50%", background:"radial-gradient(circle, rgba(154,230,180,.18), transparent 70%)", bottom:-60, left:-60, filter:"blur(10px)", pointerEvents:"none" },
-  loginWrap: { width:"100%", maxWidth:420, position:"relative", zIndex:1 },
-  bigLogo: { width:104, height:104, borderRadius:"50%", overflow:"hidden", display:"inline-flex", alignItems:"center", justifyContent:"center", marginBottom:18, background:"white", border:"3px solid rgba(201,168,76,.5)", boxShadow:"0 0 0 6px rgba(201,168,76,.12), 0 12px 36px rgba(0,0,0,.45)" },
-  loginCard: { background:"rgba(255,255,255,.06)", backdropFilter:"blur(22px) saturate(160%)", WebkitBackdropFilter:"blur(22px) saturate(160%)", border:"1px solid rgba(255,255,255,.14)", borderRadius:22, padding:"32px 28px", boxShadow:"0 24px 60px -10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08)" },
-  loginCardHead: { display:"flex", alignItems:"center", gap:10, marginBottom:22 },
-  loginCardIcon: { width:34, height:34, borderRadius:10, background:"rgba(201,168,76,.18)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:16, flexShrink:0 },
-  loginLabel: { display:"block", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:.6, color:"#9ae6b4", marginBottom:7 },
-  loginSelect: { width:"100%", padding:"11px 14px", borderRadius:12, border:"1.5px solid rgba(255,255,255,.16)", background:"rgba(255,255,255,.06)", color:"#fff", fontFamily:"inherit", fontSize:14, marginBottom:16, outline:"none", transition:"border-color .2s, box-shadow .2s, background .2s", appearance:"none" },
-  loginInput: { width:"100%", padding:"11px 42px 11px 14px", borderRadius:12, border:"1.5px solid rgba(255,255,255,.16)", background:"rgba(255,255,255,.06)", color:"#fff", fontFamily:"inherit", fontSize:14, outline:"none", transition:"border-color .2s, box-shadow .2s, background .2s" },
-  loginBtn: { width:"100%", padding:13, background:"linear-gradient(135deg,#d9b85c,#c9a84c)", color:"#1a2e1f", border:"none", borderRadius:12, fontSize:14, fontWeight:700, cursor:"pointer", marginTop:18, display:"flex", alignItems:"center", justifyContent:"center", gap:8, letterSpacing:.2, boxShadow:"0 10px 24px -6px rgba(201,168,76,.55)", transition:"transform .18s, box-shadow .18s" },
-  loginErr: { display:"flex", alignItems:"center", gap:7, color:"#feb2b2", fontSize:12.5, marginTop:14, padding:"9px 12px", background:"rgba(229,62,62,.12)", border:"1px solid rgba(229,62,62,.3)", borderRadius:10 },
+  // login — split layout (geometric panel left, form right)
+  loginScreen: { minHeight:"calc(100vh - 60px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24, background:"#eef3ee" },
+  loginShell: { width:"100%", maxWidth:920, minHeight:560, display:"flex", borderRadius:24, overflow:"hidden", boxShadow:"0 30px 70px -20px rgba(15,51,32,.35)", background:"#fff" },
+  loginPanel: { flex:"1 1 46%", position:"relative", overflow:"hidden", background:"linear-gradient(160deg,#0f3320 0%,#1a4731 55%,#276749 100%)", display:"flex", flexDirection:"column", justifyContent:"space-between", padding:"38px 34px", minWidth:0 },
+  loginPanelBrand: { display:"flex", alignItems:"center", gap:10, position:"relative", zIndex:2 },
+  loginPanelLogo: { width:38, height:38, borderRadius:9, overflow:"hidden", background:"white", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 },
+  loginPanelTitle: { fontSize:16, fontWeight:800, color:"#fff", letterSpacing:.3 },
+  loginPanelCopy: { position:"relative", zIndex:2, marginTop:"auto" },
+  loginPanelHeading: { fontSize:26, fontWeight:800, color:"#fff", lineHeight:1.25, marginBottom:10, letterSpacing:-.3 },
+  loginPanelSub: { fontSize:13, color:"rgba(255,255,255,.75)", lineHeight:1.6, maxWidth:300 },
+  loginGeo: { position:"absolute", inset:0, zIndex:1, opacity:.5 },
+  loginWrap: { flex:"1 1 54%", display:"flex", alignItems:"center", justifyContent:"center", padding:"40px 36px", position:"relative" },
+  loginCard: { width:"100%", maxWidth:340 },
+  loginCardHead: { marginBottom:26 },
+  loginCardTitle: { fontSize:20, fontWeight:800, color:"#1a2e1f", letterSpacing:-.3 },
+  loginCardSub: { fontSize:12.5, color:"#6b7c70", marginTop:5 },
+  loginLabel: { display:"block", fontSize:11.5, fontWeight:700, color:"#2f4a37", marginBottom:7 },
+  loginSelect: { width:"100%", padding:"11px 14px", borderRadius:10, border:"1.5px solid #dfe6e0", background:"#f7faf8", color:"#1a2e1f", fontFamily:"inherit", fontSize:14, marginBottom:16, outline:"none", transition:"border-color .2s, box-shadow .2s", appearance:"none" },
+  loginInput: { width:"100%", padding:"11px 42px 11px 14px", borderRadius:10, border:"1.5px solid #dfe6e0", background:"#f7faf8", color:"#1a2e1f", fontFamily:"inherit", fontSize:14, outline:"none", transition:"border-color .2s, box-shadow .2s" },
+  loginRow: { display:"flex", alignItems:"center", justifyContent:"flex-end", marginTop:8 },
+  loginBtn: { width:"100%", padding:13, background:"linear-gradient(135deg,#2f6b45,#1a4731)", color:"#fff", border:"none", borderRadius:10, fontSize:14, fontWeight:700, cursor:"pointer", marginTop:20, display:"flex", alignItems:"center", justifyContent:"center", gap:8, letterSpacing:.2, boxShadow:"0 10px 22px -6px rgba(26,71,49,.45)", transition:"transform .18s, box-shadow .18s" },
+  loginErr: { display:"flex", alignItems:"center", gap:7, color:"#c53030", fontSize:12.5, marginTop:14, padding:"9px 12px", background:"rgba(229,62,62,.08)", border:"1px solid rgba(229,62,62,.25)", borderRadius:10 },
 
   // main layout
   layout: { display:"flex", height:"calc(100vh - 60px)", overflow:"clip" },
@@ -711,35 +719,58 @@ export default function App() {
 
       {/* LOGIN */}
       {!user && <div style={S.loginScreen}>
-        <div style={S.loginOrbGold}/>
-        <div style={S.loginOrbGreen}/>
-        <div style={S.loginWrap} className="login-fade">
-          <div style={{textAlign:"center",marginBottom:32}}>
-            <div style={S.bigLogo}><img src={LOGO_SRC} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="CABLAKA"/></div>
-            <h1 style={{fontSize:30,fontWeight:800,color:"#fff",letterSpacing:-1}}>CABLA<span style={{color:"#c9a84c"}}>KA</span></h1>
-            <p style={{fontSize:12,color:"#9ae6b4",marginTop:6}}>Catatan Berkas Layanan Keluar Kantor · Pengadilan Agama Purwokerto</p>
+        <div style={S.loginShell} className="login-fade login-shell">
+          <div style={S.loginPanel}>
+            <svg style={S.loginGeo} viewBox="0 0 360 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="360,0 360,560 180,560" fill="rgba(255,255,255,.04)"/>
+              <polygon points="0,560 360,560 360,460" fill="rgba(201,168,76,.10)"/>
+              <polygon points="40,120 110,90 130,160 60,190" fill="rgba(255,255,255,.05)"/>
+              <polygon points="250,60 320,40 330,110 260,130" fill="rgba(201,168,76,.14)"/>
+              <polygon points="30,330 90,300 120,360 60,390" fill="rgba(255,255,255,.04)"/>
+              <polygon points="220,260 290,230 310,300 240,320" fill="rgba(255,255,255,.05)"/>
+              <polygon points="60,440 140,410 160,470 80,500" fill="rgba(201,168,76,.10)"/>
+              <line x1="40" y1="120" x2="110" y2="90" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="110" y1="90" x2="130" y2="160" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="130" y1="160" x2="60" y2="190" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="60" y1="190" x2="40" y2="120" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="250" y1="60" x2="320" y2="40" stroke="rgba(201,168,76,.3)" strokeWidth="1"/>
+              <line x1="320" y1="40" x2="330" y2="110" stroke="rgba(201,168,76,.3)" strokeWidth="1"/>
+              <line x1="330" y1="110" x2="260" y2="130" stroke="rgba(201,168,76,.3)" strokeWidth="1"/>
+              <line x1="260" y1="130" x2="250" y2="60" stroke="rgba(201,168,76,.3)" strokeWidth="1"/>
+              <line x1="220" y1="260" x2="290" y2="230" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="290" y1="230" x2="310" y2="300" stroke="rgba(255,255,255,.12)" strokeWidth="1"/>
+              <line x1="60" y1="440" x2="140" y2="410" stroke="rgba(201,168,76,.25)" strokeWidth="1"/>
+              <line x1="140" y1="410" x2="160" y2="470" stroke="rgba(201,168,76,.25)" strokeWidth="1"/>
+            </svg>
+            <div style={S.loginPanelBrand}>
+              <div style={S.loginPanelLogo}><img src={LOGO_SRC} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="CABLAKA"/></div>
+              <div style={S.loginPanelTitle}>CABLA<span style={{color:"#c9a84c"}}>KA</span></div>
+            </div>
+            <div style={S.loginPanelCopy}>
+              <div style={S.loginPanelHeading}>Catatan Berkas Layanan<br/>Keluar Kantor</div>
+              <div style={S.loginPanelSub}>Pengadilan Agama Purwokerto — kelola izin keluar kantor pegawai secara digital, cepat, dan tercatat rapi.</div>
+            </div>
           </div>
-          <div style={S.loginCard} className="login-card">
-            <div style={S.loginCardHead}>
-              <div style={S.loginCardIcon}>🔐</div>
-              <div>
-                <div style={{fontSize:15,fontWeight:700,color:"#fff"}}>Masuk ke Sistem</div>
-                <div style={{fontSize:11,color:"rgba(255,255,255,.5)"}}>Silakan pilih akun Anda</div>
+          <div style={S.loginWrap}>
+            <div style={S.loginCard}>
+              <div style={S.loginCardHead}>
+                <div style={S.loginCardTitle}>Masuk ke Sistem</div>
+                <div style={S.loginCardSub}>Silakan pilih akun Anda untuk melanjutkan</div>
               </div>
+              <label style={S.loginLabel}>Pilih Pengguna</label>
+              <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
+                <option value="">— Pilih nama Anda —</option>
+                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?"Pegawai":u.role==="atasan"?"Pimpinan":"Admin"}</option>)}
+              </select>
+              <label style={S.loginLabel}>Password</label>
+              <div style={{position:"relative",marginBottom:4}}>
+                <input style={S.loginInput} className="login-field" type={pwShow?"text":"password"} placeholder="Masukkan password…" value={pw}
+                  onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doLogin()}/>
+                <button style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:16,color:"#9aa9a0"}} onClick={()=>setPwShow(p=>!p)}>{pwShow?"🙈":"👁️"}</button>
+              </div>
+              {loginErr && <div style={S.loginErr}>❌ Password salah. Coba lagi.</div>}
+              <button style={S.loginBtn} className="login-btn" onClick={doLogin}>Masuk <span aria-hidden="true">→</span></button>
             </div>
-            <label style={S.loginLabel}>Pilih Pengguna</label>
-            <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
-              <option value="">— Pilih nama Anda —</option>
-              {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?"Pegawai":u.role==="atasan"?"Pimpinan":"Admin"}</option>)}
-            </select>
-            <label style={S.loginLabel}>Password</label>
-            <div style={{position:"relative",marginBottom:4}}>
-              <input style={S.loginInput} className="login-field" type={pwShow?"text":"password"} placeholder="Masukkan password…" value={pw}
-                onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doLogin()}/>
-              <button style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:16,color:"rgba(255,255,255,.5)"}} onClick={()=>setPwShow(p=>!p)}>{pwShow?"🙈":"👁️"}</button>
-            </div>
-            {loginErr && <div style={S.loginErr}>❌ Password salah. Coba lagi.</div>}
-            <button style={S.loginBtn} className="login-btn" onClick={doLogin}>Masuk <span aria-hidden="true">→</span></button>
           </div>
         </div>
       </div>}
@@ -814,11 +845,13 @@ export default function App() {
       <style>{`*{box-sizing:border-box;}@media print{body>*:not(#print-area){display:none!important;}#print-area{display:block!important;position:absolute;left:0;top:0;width:100%;}}
         @keyframes loginFadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
         .login-fade{animation:loginFadeIn .55s ease both;}
-        .login-field:focus{border-color:rgba(201,168,76,.7)!important;background:rgba(255,255,255,.1)!important;box-shadow:0 0 0 3px rgba(201,168,76,.22);}
-        .login-field::placeholder{color:rgba(255,255,255,.4);}
-        .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -6px rgba(201,168,76,.65);}
+        .login-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.15);}
+        .login-field::placeholder{color:#a9b6ae;}
+        .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -6px rgba(26,71,49,.55);}
         .login-btn:active{transform:translateY(0);}
-        .login-card{transition:box-shadow .25s, transform .25s;}
+        @media (max-width: 760px){
+          .login-shell{flex-direction:column!important;min-height:auto!important;}
+        }
         .sb-btn:hover{background:rgba(255,255,255,.1)!important;color:#fff!important;transform:translateX(2px);}
         .sb-btn:active{transform:translateX(0) scale(.98);}
         .sb-btn-active:hover{transform:translateX(2px);filter:brightness(1.05);}
