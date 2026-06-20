@@ -297,6 +297,8 @@ const EmptyState = ({ icon, msg }) => (
 
 const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}><span style={{display:"inline-flex",alignItems:"center",gap:6}}><MenuIcon name="refresh" size={13}/>Refresh</span></Btn>;
 
+// id user yang keterangan perannya ditampilkan sebagai "Hakim" (bukan "Pegawai") meski role-nya pegawai
+const HAKIM_IDS = [2,3,4,5,6,9,10,11];
 export default function App() {
   // Set favicon & title tab browser ke logo/identitas CABLAKA (bukan logo default)
   useEffect(() => {
@@ -760,7 +762,7 @@ export default function App() {
             <div style={S.userAvatar}>{user.avatar}</div>
             <div className="user-info-text">
               <div style={{fontSize:12.5,fontWeight:700,color:"#fff"}}>{user.nama}</div>
-              <div style={{fontSize:10,color:"#9ae6b4"}}>{user.role==="admin"?"Admin":user.role==="keduanya"?"Pegawai & Atasan":user.role==="atasan"?"Pimpinan":"Pegawai"}</div>
+              <div style={{fontSize:10,color:"#9ae6b4"}}>{user.role==="admin"?"Admin":user.role==="keduanya"?(user.id===1?"Hakim & Atasan":"Pegawai & Atasan"):user.role==="atasan"?"Pimpinan":(HAKIM_IDS.includes(user.id)?"Hakim":"Pegawai")}</div>
             </div>
             <span style={{fontSize:11,color:"rgba(255,255,255,.6)",marginLeft:2}} className="user-info-text">▾</span>
           </div>}
@@ -810,7 +812,7 @@ export default function App() {
               <label style={S.loginLabel}>Pilih Pengguna</label>
               <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
                 <option value="">— Pilih nama Anda —</option>
-                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?"Pegawai":u.role==="atasan"?"Pimpinan":u.role==="keduanya"?"Pegawai & Atasan":"Admin"}</option>)}
+                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?(HAKIM_IDS.includes(u.id)?"Hakim":"Pegawai"):u.role==="atasan"?"Pimpinan":u.role==="keduanya"?(u.id===1?"Hakim & Atasan":"Pegawai & Atasan"):"Admin"}</option>)}
               </select>
               <label style={S.loginLabel}>Password</label>
               <div style={{position:"relative",marginBottom:4}}>
