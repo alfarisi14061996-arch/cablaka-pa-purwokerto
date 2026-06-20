@@ -105,9 +105,10 @@ const S = {
   // layout
   app: { fontFamily:"'Segoe UI',sans-serif", fontSize:14, background:"#f0f4f8", minHeight:"100vh", color:"#1a202c" },
   header: { background:"linear-gradient(135deg,#1a4731,#276749)", padding:"0 24px", height:68, display:"flex", alignItems:"center", gap:14, boxShadow:"0 2px 10px rgba(0,0,0,.25)", position:"sticky", top:0, zIndex:100 },
+  hamburgerBtn: { display:"none", background:"rgba(255,255,255,.12)", border:"none", borderRadius:9, width:36, height:36, alignItems:"center", justifyContent:"center", cursor:"pointer", flexShrink:0, color:"#fff", fontSize:18 },
   brandLogo: { width:44, height:44, borderRadius:10, overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", background:"white" },
-  brandName: { fontSize:19, fontWeight:800, color:"#fff", letterSpacing:-.3 },
-  brandSub: { fontSize:9.5, color:"#9ae6b4", textTransform:"uppercase", letterSpacing:1.5, fontWeight:600 },
+  brandName: { fontSize:19, fontWeight:800, color:"#fff", letterSpacing:-.3, whiteSpace:"nowrap" },
+  brandSub: { fontSize:9.5, color:"#9ae6b4", textTransform:"uppercase", letterSpacing:1.5, fontWeight:600, whiteSpace:"nowrap" },
   headerDivider: { width:1, height:30, background:"rgba(255,255,255,.18)" },
   clockWrap: { display:"flex", alignItems:"center", gap:7, color:"#9ae6b4" },
   userPill: { display:"flex", alignItems:"center", gap:9, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:14, padding:"6px 12px 6px 8px", cursor:"pointer", transition:"background .15s" },
@@ -137,8 +138,9 @@ const S = {
   loginErr: { display:"flex", alignItems:"center", gap:7, color:"#c53030", fontSize:12.5, marginTop:14, padding:"9px 12px", background:"rgba(229,62,62,.08)", border:"1px solid rgba(229,62,62,.25)", borderRadius:10 },
 
   // main layout
-  layout: { display:"flex", height:"calc(100vh - 68px)", overflow:"clip" },
+  layout: { display:"flex", height:"calc(100vh - 68px)", overflow:"clip", position:"relative" },
   sidebar: { width:228, flexShrink:0, background:"linear-gradient(180deg,#1a4731 0%,#2d6a4f 50%,#4a7c6a 100%)", borderRight:"1px solid rgba(0,0,0,.2)", display:"flex", flexDirection:"column", padding:"18px 12px", gap:4, overflowY:"auto", boxShadow:"2px 0 16px rgba(0,0,0,.12)" },
+  sidebarOverlay: { display:"none", position:"fixed", inset:0, background:"rgba(0,0,0,.45)", zIndex:199 },
   sidebarLabel: { fontSize:10.5, fontWeight:800, textTransform:"uppercase", letterSpacing:1.6, color:"rgba(154,230,180,.55)", padding:"4px 10px 10px" },
   sidebarBtn: (active) => ({
     display:"flex", alignItems:"center", gap:11, padding:"10px 12px", border:"none",
@@ -163,7 +165,7 @@ const S = {
   statsGrid: { display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14, marginBottom:22 },
   statTile: { background:"#fff", border:"1px solid #e7ece8", borderRadius:14, padding:"14px 16px", boxShadow:"0 4px 18px rgba(15,51,32,.06)" },
   statNum: (c) => ({ fontSize:28, fontWeight:800, color:c, lineHeight:1 }),
-  statLabel: { fontSize:11, color:"#718096", marginTop:4 },
+  statLabel: { fontSize:11, color:"#718096", marginTop:4, display:"flex", alignItems:"center", gap:5 },
 
   // form
   formRow: { display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 },
@@ -235,6 +237,21 @@ const MENU_ICON_PATHS = {
   semua:    <><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></>,
   keluar:   <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>,
   send:     <><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>,
+  eye:      <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></>,
+  eyeOff:   <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></>,
+  check:    <><polyline points="20 6 9 17 4 12"/></>,
+  x:        <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
+  checkCircle: <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>,
+  xCircle:  <><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></>,
+  alertTriangle: <><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
+  clock:    <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
+  calendar: <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
+  mapPin:   <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></>,
+  fileText: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></>,
+  barChart: <><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></>,
+  refresh:  <><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></>,
+  clipboardList: <><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></>,
+  edit:     <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></>,
 };
 function MenuIcon({ name, size=18 }) {
   const path = MENU_ICON_PATHS[name];
@@ -245,12 +262,17 @@ function MenuIcon({ name, size=18 }) {
     </svg>
   );
 }
+// Helper: inline icon + text, dipakai untuk judul/label yang sebelumnya emoji
+const IconLabel = ({ icon, size=14, gap=7, children }) => (
+  <span style={{display:"inline-flex",alignItems:"center",gap}}><MenuIcon name={icon} size={size}/>{children}</span>
+);
 
 // ══════════ MAIN APP ══════════
 // ══════════ KOMPONEN UI (di luar App agar tidak remount tiap render) ══════════
 const BadgeStatus = ({ s }) => {
-  const label = s==="disetujui" ? "✅ Disetujui" : s==="ditolak" ? "❌ Ditolak" : "⏳ Menunggu";
-  return <span style={S.badge(s)}>{label}</span>;
+  const icon = s==="disetujui" ? "checkCircle" : s==="ditolak" ? "xCircle" : "clock";
+  const label = s==="disetujui" ? "Disetujui" : s==="ditolak" ? "Ditolak" : "Menunggu";
+  return <span style={S.badge(s)}><MenuIcon name={icon} size={12}/> {label}</span>;
 };
 
 const Btn = ({ variant="primary", sm=false, full=false, onClick, children, style={} }) => (
@@ -273,7 +295,7 @@ const EmptyState = ({ icon, msg }) => (
   <div style={S.empty}><div style={{ fontSize:40, marginBottom:10 }}>{icon}</div><p style={{ fontSize:13 }}>{msg}</p></div>
 );
 
-const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}>🔄 Refresh</Btn>;
+const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}><span style={{display:"inline-flex",alignItems:"center",gap:6}}><MenuIcon name="refresh" size={13}/>Refresh</span></Btn>;
 
 export default function App() {
   // Set favicon & title tab browser ke logo/identitas CABLAKA (bukan logo default)
@@ -297,6 +319,7 @@ export default function App() {
   const [toasts, setToasts] = useState([]);
   const [modal, setModal] = useState(null); // null | "detail" | "tolak"
   const [selectedIzin, setSelectedIzin] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar toggle
 
   // login state
   const [selUser, setSelUser] = useState("");
@@ -498,7 +521,7 @@ export default function App() {
     if (tab === "form") return (
       <div style={{ maxWidth:680 }}>
         <div style={S.alertInfo}>👋 Halo, <b>{user.nama}</b>. Isi form di bawah untuk mengajukan izin keluar kantor.</div>
-        <Card title="📝 Form Pengajuan Izin Keluar">
+        <Card title={<IconLabel icon="edit">Form Pengajuan Izin Keluar</IconLabel>}>
           <div style={S.formRow}>
             <div style={S.formGroup}>
               <label style={S.formLabel}>Tanggal Izin *</label>
@@ -562,12 +585,12 @@ export default function App() {
       const s = { total:dataRiwayat.length, dis:dataRiwayat.filter(x=>x.status==="disetujui").length, dit:dataRiwayat.filter(x=>x.status==="ditolak").length, men:dataRiwayat.filter(x=>x.status==="menunggu").length };
       return <>
         <div style={S.statsGrid}>
-          {[["📋 Total",s.total,"#276749"],["✅ Disetujui",s.dis,"#276749"],["❌ Ditolak",s.dit,"#c53030"],["⏳ Menunggu",s.men,"#c9a84c"]].map(([l,n,c])=>(
-            <div key={l} style={S.statTile}><div style={S.statNum(c)}>{n}</div><div style={S.statLabel}>{l}</div></div>
+          {[["clipboardList","Total",s.total,"#276749"],["checkCircle","Disetujui",s.dis,"#276749"],["xCircle","Ditolak",s.dit,"#c53030"],["clock","Menunggu",s.men,"#c9a84c"]].map(([ic,l,n,c])=>(
+            <div key={l} style={S.statTile}><div style={S.statNum(c)}>{n}</div><div style={S.statLabel}><MenuIcon name={ic} size={12}/>{l}</div></div>
           ))}
         </div>
-        <Card title="📋 Riwayat Izin Saya" right={<RefreshBtn onClick={refreshData}/>} noPad>
-          {!dataRiwayat.length ? <EmptyState icon="📭" msg="Belum ada pengajuan izin"/> :
+        <Card title={<IconLabel icon="fileText">Riwayat Izin Saya</IconLabel>} right={<RefreshBtn onClick={refreshData}/>} noPad>
+          {!dataRiwayat.length ? <EmptyState icon={<MenuIcon name="fileText" size={36}/>} msg="Belum ada pengajuan izin"/> :
           <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
             <thead><tr><Th>#</Th><Th>Tanggal</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th><Th>Status</Th><Th>Aksi</Th></tr></thead>
             <tbody>{dataRiwayat.map((x,i)=><tr key={x.id}>
@@ -577,7 +600,7 @@ export default function App() {
               <Td><BadgeStatus s={x.status}/></Td>
               <Td><div style={{display:"flex",gap:5}}>
                 <Btn variant="info" sm onClick={()=>{setSelectedIzin(x.id);setModal("detail");}}>🔍</Btn>
-                {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}>🖨️</Btn>}
+                {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}><MenuIcon name="fileText" size={13}/></Btn>}
               </div></Td>
             </tr>)}</tbody>
           </table></div>}
@@ -586,8 +609,8 @@ export default function App() {
     }
 
     if (tab === "approval") return (
-      <Card title={<>⏳ Perlu Disetujui <span style={{background:"#c9a84c",color:"#fff",padding:"2px 10px",borderRadius:99,fontSize:12,fontWeight:700}}>{dataPending.length}</span></>} right={<RefreshBtn onClick={refreshData}/>}>
-        {!dataPending.length ? <EmptyState icon="🎉" msg="Tidak ada pengajuan yang menunggu"/> :
+      <Card title={<IconLabel icon="clock">Perlu Disetujui <span style={{background:"#c9a84c",color:"#fff",padding:"2px 10px",borderRadius:99,fontSize:12,fontWeight:700}}>{dataPending.length}</span></IconLabel>} right={<RefreshBtn onClick={refreshData}/>}>
+        {!dataPending.length ? <EmptyState icon={<MenuIcon name="checkCircle" size={36}/>} msg="Tidak ada pengajuan yang menunggu"/> :
         dataPending.map(x=>(
           <div key={x.id} style={S.pendCard}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,flexWrap:"wrap"}}>
@@ -596,15 +619,15 @@ export default function App() {
                 <div style={{fontSize:11,color:"#718096"}}>{x.pegawaiJabatan}</div>
               </div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                <Btn variant="success" sm onClick={()=>setujui(x.id)}>✅ Setujui</Btn>
-                <Btn variant="danger" sm onClick={()=>{setSelectedIzin(x.id);setAlasanTolak("");setModal("tolak");}}>❌ Tolak</Btn>
+                <Btn variant="success" sm onClick={()=>setujui(x.id)}><IconLabel icon="check" size={13} gap={5}>Setujui</IconLabel></Btn>
+                <Btn variant="danger" sm onClick={()=>{setSelectedIzin(x.id);setAlasanTolak("");setModal("tolak");}}><IconLabel icon="x" size={13} gap={5}>Tolak</IconLabel></Btn>
                 <Btn variant="info" sm onClick={()=>{setSelectedIzin(x.id);setModal("detail");}}>🔍</Btn>
               </div>
             </div>
             <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap",fontSize:12,color:"#718096"}}>
-              <span>📅 {fmtTgl(x.tanggal)}</span><span>🕐 {x.jamKeluar}–{x.jamKembali}</span><span>📍 {x.tujuan}</span>
+              <span><IconLabel icon="calendar" size={12} gap={5}>{fmtTgl(x.tanggal)}</IconLabel></span><span><IconLabel icon="clock" size={12} gap={5}>{x.jamKeluar}–{x.jamKembali}</IconLabel></span><span><IconLabel icon="mapPin" size={12} gap={5}>{x.tujuan}</IconLabel></span>
             </div>
-            <div style={{fontSize:13,color:"#4a5568",marginTop:8,fontStyle:"italic"}}>📌 {x.keperluan}{x.keterangan?" — "+x.keterangan:""}</div>
+            <div style={{fontSize:13,color:"#4a5568",marginTop:8,fontStyle:"italic",display:"flex",alignItems:"center",gap:6}}><MenuIcon name="edit" size={12}/>{x.keperluan}{x.keterangan?" — "+x.keterangan:""}</div>
             <div style={{fontSize:11,color:"#cbd5e0",marginTop:6}}>Diajukan {fmtDT(x.createdAt)}</div>
           </div>
         ))}
@@ -612,8 +635,8 @@ export default function App() {
     );
 
     if (tab === "done") return (
-      <Card title="✅ Sudah Diproses" right={<RefreshBtn onClick={refreshData}/>} noPad>
-        {!dataDone.length ? <EmptyState icon="📭" msg="Belum ada"/> :
+      <Card title={<IconLabel icon="checkCircle">Sudah Diproses</IconLabel>} right={<RefreshBtn onClick={refreshData}/>} noPad>
+        {!dataDone.length ? <EmptyState icon={<MenuIcon name="fileText" size={36}/>} msg="Belum ada"/> :
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
           <thead><tr><Th>Nama</Th><Th>Tanggal</Th><Th>Keperluan</Th><Th>Status</Th><Th>Aksi</Th></tr></thead>
           <tbody>{dataDone.map(x=><tr key={x.id}>
@@ -622,7 +645,7 @@ export default function App() {
             <Td><BadgeStatus s={x.status}/></Td>
             <Td><div style={{display:"flex",gap:5}}>
               <Btn variant="info" sm onClick={()=>{setSelectedIzin(x.id);setModal("detail");}}>🔍</Btn>
-              {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}>🖨️</Btn>}
+              {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}><MenuIcon name="fileText" size={13}/></Btn>}
             </div></Td>
           </tr>)}</tbody>
         </table></div>}
@@ -633,8 +656,8 @@ export default function App() {
       // Admin boleh lihat semua data. Atasan hanya boleh lihat pengajuan yang diajukan ke dirinya sendiri.
       const dataSemua = user.role === "admin" ? db.izin : db.izin.filter(x=>x.atasanId===user.id);
       return (
-      <Card title={user.role==="admin" ? "📋 Semua Pengajuan" : "📋 Semua Pengajuan ke Saya"} right={<RefreshBtn onClick={refreshData}/>} noPad>
-        {!dataSemua.length ? <EmptyState icon="📭" msg="Belum ada data"/> :
+      <Card title={<IconLabel icon="clipboardList">{user.role==="admin" ? "Semua Pengajuan" : "Semua Pengajuan ke Saya"}</IconLabel>} right={<RefreshBtn onClick={refreshData}/>} noPad>
+        {!dataSemua.length ? <EmptyState icon={<MenuIcon name="fileText" size={36}/>} msg="Belum ada data"/> :
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
           <thead><tr><Th>#</Th><Th>Nama</Th><Th>Tanggal</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th><Th>Diajukan ke</Th><Th>Status</Th><Th>Aksi</Th></tr></thead>
           <tbody>{dataSemua.map((x,i)=>{
@@ -648,7 +671,7 @@ export default function App() {
               <Td><BadgeStatus s={x.status}/></Td>
               <Td><div style={{display:"flex",gap:5}}>
                 <Btn variant="info" sm onClick={()=>{setSelectedIzin(x.id);setModal("detail");}}>🔍</Btn>
-                {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}>🖨️</Btn>}
+                {x.status==="disetujui"&&<Btn variant="ghost" sm onClick={()=>cetakSurat(x.id)}><MenuIcon name="fileText" size={13}/></Btn>}
                 {user.role==="admin"&&<Btn variant="danger" sm onClick={()=>hapus(x.id)}>🗑️</Btn>}
               </div></Td>
             </tr>;
@@ -663,12 +686,12 @@ export default function App() {
       const s = { total:db.izin.length, dis:db.izin.filter(x=>x.status==="disetujui").length, dit:db.izin.filter(x=>x.status==="ditolak").length, men:db.izin.filter(x=>x.status==="menunggu").length };
       return <>
         <div style={S.statsGrid}>
-          {[["📋 Total",s.total,"#276749"],["✅ Disetujui",s.dis,"#276749"],["❌ Ditolak",s.dit,"#c53030"],["⏳ Menunggu",s.men,"#c9a84c"]].map(([l,n,c])=>(
-            <div key={l} style={S.statTile}><div style={S.statNum(c)}>{n}</div><div style={S.statLabel}>{l}</div></div>
+          {[["clipboardList","Total",s.total,"#276749"],["checkCircle","Disetujui",s.dis,"#276749"],["xCircle","Ditolak",s.dit,"#c53030"],["clock","Menunggu",s.men,"#c9a84c"]].map(([ic,l,n,c])=>(
+            <div key={l} style={S.statTile}><div style={S.statNum(c)}>{n}</div><div style={S.statLabel}><MenuIcon name={ic} size={12}/>{l}</div></div>
           ))}
         </div>
         <Card title={`🔔 Izin Keluar Hari Ini — ${fmtTgl(todayStr)}`} right={<RefreshBtn onClick={refreshData}/>} noPad>
-          {!hariIni.length ? <EmptyState icon="🏢" msg="Tidak ada pegawai keluar hari ini"/> :
+          {!hariIni.length ? <EmptyState icon={<MenuIcon name="checkCircle" size={36}/>} msg="Tidak ada pegawai keluar hari ini"/> :
           <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
             <thead><tr><Th>Nama</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th></tr></thead>
             <tbody>{hariIni.map(x=><tr key={x.id}>
@@ -719,26 +742,27 @@ export default function App() {
 
       {/* TOASTS */}
       <div style={S.toastWrap}>
-        {toasts.map(t=><div key={t.id} style={S.toast(t.err)}>{t.err?"⚠️":"✅"} {t.msg}</div>)}
+        {toasts.map(t=><div key={t.id} style={S.toast(t.err)}><span style={{display:"inline-flex",verticalAlign:"-3px",marginRight:6}}><MenuIcon name={t.err?"alertTriangle":"checkCircle"} size={15}/></span>{t.msg}</div>)}
       </div>
 
       {/* HEADER */}
       <header style={S.header}>
+        {user && <button style={S.hamburgerBtn} className="hamburger-btn" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Menu">☰</button>}
         <div style={S.brandLogo}><img src={LOGO_SRC} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="CABLAKA"/></div>
-        <div>
+        <div className="brand-text" style={{minWidth:0,overflow:"hidden"}}>
           <div style={S.brandName}>CABLAKA</div>
-          <div style={S.brandSub}>Catatan Berkas Layanan Keluar Kantor</div>
+          <div style={S.brandSub} className="brand-sub">Catatan Berkas Layanan Keluar Kantor</div>
         </div>
         <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:16}}>
-          <div style={S.clockWrap}><span style={{fontSize:14}}>🕐</span><Clock /></div>
+          <div style={S.clockWrap}><MenuIcon name="clock" size={14}/><Clock /></div>
           {user && <div style={S.headerDivider}/>}
           {user && <div style={S.userPill} className="user-pill" onClick={logout}>
             <div style={S.userAvatar}>{user.avatar}</div>
-            <div>
+            <div className="user-info-text">
               <div style={{fontSize:12.5,fontWeight:700,color:"#fff"}}>{user.nama}</div>
               <div style={{fontSize:10,color:"#9ae6b4"}}>{user.role==="admin"?"Admin":user.role==="keduanya"?"Pegawai & Atasan":user.role==="atasan"?"Pimpinan":"Pegawai"}</div>
             </div>
-            <span style={{fontSize:11,color:"rgba(255,255,255,.6)",marginLeft:2}}>▾</span>
+            <span style={{fontSize:11,color:"rgba(255,255,255,.6)",marginLeft:2}} className="user-info-text">▾</span>
           </div>}
         </div>
       </header>
@@ -792,9 +816,9 @@ export default function App() {
               <div style={{position:"relative",marginBottom:4}}>
                 <input style={S.loginInput} className="login-field" type={pwShow?"text":"password"} placeholder="Masukkan password…" value={pw}
                   onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doLogin()}/>
-                <button style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:16,color:"#9aa9a0"}} onClick={()=>setPwShow(p=>!p)}>{pwShow?"🙈":"👁️"}</button>
+                <button style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:"#9aa9a0",display:"flex",alignItems:"center"}} onClick={()=>setPwShow(p=>!p)}><MenuIcon name={pwShow?"eyeOff":"eye"} size={17}/></button>
               </div>
-              {loginErr && <div style={S.loginErr}>❌ Password salah. Coba lagi.</div>}
+              {loginErr && <div style={S.loginErr}><MenuIcon name="xCircle" size={14}/> Password salah. Coba lagi.</div>}
               <button style={S.loginBtn} className="login-btn" onClick={doLogin}>Masuk <span aria-hidden="true">→</span></button>
             </div>
           </div>
@@ -803,11 +827,14 @@ export default function App() {
 
       {/* MAIN */}
       {user && <div style={S.layout}>
+        {/* OVERLAY (mobile only, shown when sidebar open) */}
+        {sidebarOpen && <div style={{...S.sidebarOverlay, display:"block"}} className="sidebar-overlay" onClick={()=>setSidebarOpen(false)}/>}
+
         {/* SIDEBAR */}
-        <nav style={S.sidebar}>
+        <nav style={S.sidebar} className={"app-sidebar"+(sidebarOpen?" sidebar-open":"")}>
           <div style={S.sidebarLabel}>Menu</div>
           {tabs.map(t=>(
-            <button key={t.key} className={tab===t.key?"sb-btn-active":"sb-btn"} style={S.sidebarBtn(tab===t.key)} onClick={()=>setTab(t.key)}>
+            <button key={t.key} className={tab===t.key?"sb-btn-active":"sb-btn"} style={S.sidebarBtn(tab===t.key)} onClick={()=>{setTab(t.key);setSidebarOpen(false);}}>
               <span style={{width:24,display:"flex",alignItems:"center",justifyContent:"center",opacity: tab===t.key?1:.85}}><MenuIcon name={t.icon} size={17}/></span>
               {t.label}
               {t.badge>0 && <span style={S.sbBadge}>{t.badge}</span>}
@@ -819,7 +846,7 @@ export default function App() {
         </nav>
 
         {/* CONTENT */}
-        <main style={S.content}>{renderTab()}</main>
+        <main style={S.content} className="app-content">{renderTab()}</main>
       </div>}
 
       {/* MODAL DETAIL */}
@@ -827,27 +854,27 @@ export default function App() {
         <div style={S.overlay} onClick={()=>setModal(null)}>
           <div style={S.modal} onClick={e=>e.stopPropagation()}>
             <button style={S.modalClose} onClick={()=>setModal(null)}>✕</button>
-            <div style={S.modalTitle}>📋 Detail Izin Keluar</div>
+            <div style={S.modalTitle}><IconLabel icon="clipboardList" size={16}>Detail Izin Keluar</IconLabel></div>
             <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
               <tbody>
-                <DR l="👤 Nama" v={detailIzin.pegawaiNama}/>
-                <DR l="🪪 NIP" v={detailIzin.pegawaiNip}/>
-                <DR l="💼 Jabatan" v={detailIzin.pegawaiJabatan}/>
-                <DR l="📅 Tanggal" v={fmtTgl(detailIzin.tanggal)}/>
-                <DR l="🕐 Jam Keluar" v={detailIzin.jamKeluar+" WIB"}/>
-                <DR l="🕓 Est. Kembali" v={detailIzin.jamKembali+" WIB"}/>
-                <DR l="📌 Keperluan" v={detailIzin.keperluan}/>
-                <DR l="📍 Tujuan" v={detailIzin.tujuan}/>
-                <DR l="📝 Keterangan" v={detailIzin.keterangan||"—"}/>
-                <DR l="👨‍💼 Diajukan ke" v={detailAtasan?.nama||"—"}/>
-                <DR l="📊 Status" v={detailIzin.status==="disetujui"?'<span style="background:#c6f6d5;color:#276749;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">✅ Disetujui</span>':detailIzin.status==="ditolak"?'<span style="background:#fed7d7;color:#c53030;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">❌ Ditolak</span>':'<span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">⏳ Menunggu</span>'}/>
-                {detailIzin.status==="disetujui"&&<DR l="✅ Disetujui oleh" v={detailIzin.disetujuiOleh}/>}
-                {detailIzin.status==="ditolak"&&<DR l="❌ Alasan Tolak" v={`<span style="color:#c53030">${detailIzin.alasanTolak}</span>`}/>}
-                <DR l="📆 Pengajuan" v={fmtDT(detailIzin.createdAt)}/>
-                {detailIzin.updatedAt&&<DR l="🔄 Diperbarui" v={fmtDT(detailIzin.updatedAt)}/>}
+                <DR l={<IconLabel icon="pegawai" size={13}>Nama</IconLabel>} v={detailIzin.pegawaiNama}/>
+                <DR l={<IconLabel icon="fileText" size={13}>NIP</IconLabel>} v={detailIzin.pegawaiNip}/>
+                <DR l={<IconLabel icon="approval" size={13}>Jabatan</IconLabel>} v={detailIzin.pegawaiJabatan}/>
+                <DR l={<IconLabel icon="calendar" size={13}>Tanggal</IconLabel>} v={fmtTgl(detailIzin.tanggal)}/>
+                <DR l={<IconLabel icon="clock" size={13}>Jam Keluar</IconLabel>} v={detailIzin.jamKeluar+" WIB"}/>
+                <DR l={<IconLabel icon="clock" size={13}>Est. Kembali</IconLabel>} v={detailIzin.jamKembali+" WIB"}/>
+                <DR l={<IconLabel icon="edit" size={13}>Keperluan</IconLabel>} v={detailIzin.keperluan}/>
+                <DR l={<IconLabel icon="mapPin" size={13}>Tujuan</IconLabel>} v={detailIzin.tujuan}/>
+                <DR l={<IconLabel icon="fileText" size={13}>Keterangan</IconLabel>} v={detailIzin.keterangan||"—"}/>
+                <DR l={<IconLabel icon="pegawai" size={13}>Diajukan ke</IconLabel>} v={detailAtasan?.nama||"—"}/>
+                <DR l={<IconLabel icon="barChart" size={13}>Status</IconLabel>} v={detailIzin.status==="disetujui"?'<span style="background:#c6f6d5;color:#276749;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">Disetujui</span>':detailIzin.status==="ditolak"?'<span style="background:#fed7d7;color:#c53030;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">Ditolak</span>':'<span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;">Menunggu</span>'}/>
+                {detailIzin.status==="disetujui"&&<DR l={<IconLabel icon="checkCircle" size={13}>Disetujui oleh</IconLabel>} v={detailIzin.disetujuiOleh}/>}
+                {detailIzin.status==="ditolak"&&<DR l={<IconLabel icon="xCircle" size={13}>Alasan Tolak</IconLabel>} v={`<span style="color:#c53030">${detailIzin.alasanTolak}</span>`}/>}
+                <DR l={<IconLabel icon="calendar" size={13}>Pengajuan</IconLabel>} v={fmtDT(detailIzin.createdAt)}/>
+                {detailIzin.updatedAt&&<DR l={<IconLabel icon="refresh" size={13}>Diperbarui</IconLabel>} v={fmtDT(detailIzin.updatedAt)}/>}
               </tbody>
             </table>
-            {detailIzin.status==="disetujui"&&<div style={{marginTop:18}}><Btn variant="gold" onClick={()=>{cetakSurat(detailIzin.id);setModal(null);}}>🖨️ Cetak Surat Izin</Btn></div>}
+            {detailIzin.status==="disetujui"&&<div style={{marginTop:18}}><Btn variant="gold" onClick={()=>{cetakSurat(detailIzin.id);setModal(null);}}><IconLabel icon="fileText" size={14}>Cetak Surat Izin</IconLabel></Btn></div>}
           </div>
         </div>
       )}
@@ -857,7 +884,7 @@ export default function App() {
         <div style={S.overlay} onClick={()=>setModal(null)}>
           <div style={{...S.modal,maxWidth:420}} onClick={e=>e.stopPropagation()}>
             <button style={S.modalClose} onClick={()=>setModal(null)}>✕</button>
-            <div style={S.modalTitle}>❌ Alasan Penolakan</div>
+            <div style={S.modalTitle}><IconLabel icon="xCircle" size={16}>Alasan Penolakan</IconLabel></div>
             <div style={S.formGroup}>
               <label style={S.formLabel}>Alasan *</label>
               <textarea style={{...S.formControl,resize:"vertical",minHeight:90}} className="form-field" placeholder="Jelaskan alasan penolakan…" value={alasanTolak} onChange={e=>setAlasanTolak(e.target.value)}/>
@@ -885,6 +912,38 @@ export default function App() {
         .sb-btn:active{transform:translateX(0) scale(.98);}
         .sb-btn-active:hover{transform:translateX(2px);filter:brightness(1.05);}
         .sb-btn-danger:hover{background:rgba(229,62,62,.18)!important;color:#fff!important;}
+
+        /* ───── MOBILE RESPONSIVE ───── */
+        @media (max-width: 760px){
+          .hamburger-btn{display:flex!important;}
+          .brand-sub{display:none;}
+          .user-info-text{display:none;}
+          .user-pill{padding:6px!important;gap:0!important;}
+          header{padding:0 12px!important;gap:10px!important;}
+
+          .app-sidebar{
+            position:fixed;
+            top:68px;
+            left:0;
+            bottom:0;
+            transform:translateX(-100%);
+            transition:transform .25s ease;
+            z-index:200;
+            width:78vw!important;
+            max-width:280px;
+          }
+          .app-sidebar.sidebar-open{
+            transform:translateX(0);
+            box-shadow:4px 0 24px rgba(0,0,0,.35);
+          }
+          .app-content{
+            padding:14px!important;
+            width:100%;
+          }
+        }
+        @media (max-width: 420px){
+          .app-content{padding:10px!important;}
+        }
       `}</style>
     </div>
   );
