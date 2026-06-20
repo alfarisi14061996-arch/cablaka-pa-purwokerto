@@ -104,15 +104,17 @@ async function dbSave(data) {
 const S = {
   // layout
   app: { fontFamily:"'Segoe UI',sans-serif", fontSize:14, background:"#f0f4f8", minHeight:"100vh", color:"#1a202c" },
-  header: { background:"linear-gradient(135deg,#1a4731,#276749)", padding:"0 24px", height:60, display:"flex", alignItems:"center", gap:14, boxShadow:"0 2px 10px rgba(0,0,0,.25)", position:"sticky", top:0, zIndex:100 },
-  brandLogo: { width:42, height:42, borderRadius:8, overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", background:"white" },
-  brandName: { fontSize:17, fontWeight:800, color:"#fff", letterSpacing:-.3 },
-  brandSub: { fontSize:9, color:"#9ae6b4", textTransform:"uppercase", letterSpacing:1.5, fontWeight:600 },
-  userPill: { display:"flex", alignItems:"center", gap:8, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:99, padding:"5px 14px 5px 7px", cursor:"pointer" },
-  userAvatar: { width:26, height:26, borderRadius:"50%", background:"#c9a84c", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13 },
+  header: { background:"linear-gradient(135deg,#1a4731,#276749)", padding:"0 24px", height:68, display:"flex", alignItems:"center", gap:14, boxShadow:"0 2px 10px rgba(0,0,0,.25)", position:"sticky", top:0, zIndex:100 },
+  brandLogo: { width:44, height:44, borderRadius:10, overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", background:"white" },
+  brandName: { fontSize:19, fontWeight:800, color:"#fff", letterSpacing:-.3 },
+  brandSub: { fontSize:9.5, color:"#9ae6b4", textTransform:"uppercase", letterSpacing:1.5, fontWeight:600 },
+  headerDivider: { width:1, height:30, background:"rgba(255,255,255,.18)" },
+  clockWrap: { display:"flex", alignItems:"center", gap:7, color:"#9ae6b4" },
+  userPill: { display:"flex", alignItems:"center", gap:9, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:14, padding:"6px 12px 6px 8px", cursor:"pointer", transition:"background .15s" },
+  userAvatar: { width:30, height:30, borderRadius:"50%", background:"linear-gradient(135deg,#d9b85c,#c9a84c)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 },
 
   // login — split layout (geometric panel left, form right)
-  loginScreen: { minHeight:"calc(100vh - 60px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24, background:"#eef3ee" },
+  loginScreen: { minHeight:"calc(100vh - 68px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24, background:"#eef3ee" },
   loginShell: { width:"100%", maxWidth:920, minHeight:560, display:"flex", borderRadius:24, overflow:"hidden", boxShadow:"0 30px 70px -20px rgba(15,51,32,.35)", background:"#fff" },
   loginPanel: { flex:"1 1 46%", position:"relative", overflow:"hidden", background:"linear-gradient(160deg,#0f3320 0%,#1a4731 55%,#276749 100%)", display:"flex", flexDirection:"column", justifyContent:"space-between", padding:"38px 34px", minWidth:0 },
   loginPanelBrand: { display:"flex", alignItems:"center", gap:10, position:"relative", zIndex:2 },
@@ -135,7 +137,7 @@ const S = {
   loginErr: { display:"flex", alignItems:"center", gap:7, color:"#c53030", fontSize:12.5, marginTop:14, padding:"9px 12px", background:"rgba(229,62,62,.08)", border:"1px solid rgba(229,62,62,.25)", borderRadius:10 },
 
   // main layout
-  layout: { display:"flex", height:"calc(100vh - 60px)", overflow:"clip" },
+  layout: { display:"flex", height:"calc(100vh - 68px)", overflow:"clip" },
   sidebar: { width:228, flexShrink:0, background:"linear-gradient(180deg,#15351f,#1a4731 55%,#173d28)", borderRight:"1px solid rgba(0,0,0,.2)", display:"flex", flexDirection:"column", padding:"18px 12px", gap:4, overflowY:"auto", boxShadow:"2px 0 16px rgba(0,0,0,.12)" },
   sidebarLabel: { fontSize:10.5, fontWeight:800, textTransform:"uppercase", letterSpacing:1.6, color:"rgba(154,230,180,.55)", padding:"4px 10px 10px" },
   sidebarBtn: (active) => ({
@@ -152,36 +154,36 @@ const S = {
   content: { flex:1, overflowY:"auto", padding:24 },
 
   // cards
-  card: { background:"#fff", borderRadius:10, border:"1px solid #e2e8f0", boxShadow:"0 1px 3px rgba(0,0,0,.07)", marginBottom:20 },
-  cardHeader: { padding:"13px 20px", borderBottom:"1px solid #e2e8f0", display:"flex", alignItems:"center", justifyContent:"space-between", background:"#f7fafc", borderRadius:"10px 10px 0 0" },
-  cardTitle: { fontSize:14, fontWeight:700, color:"#2d3748", display:"flex", alignItems:"center", gap:8 },
-  cardBody: { padding:20 },
+  card: { background:"#fff", borderRadius:16, border:"1px solid #e7ece8", boxShadow:"0 4px 18px rgba(15,51,32,.06)", marginBottom:20 },
+  cardHeader: { padding:"18px 24px", borderBottom:"1px solid #eef2ef", display:"flex", alignItems:"center", justifyContent:"space-between" },
+  cardTitle: { fontSize:16, fontWeight:800, color:"#1a2e1f", display:"flex", alignItems:"center", gap:9 },
+  cardBody: { padding:24 },
 
   // stats
   statsGrid: { display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14, marginBottom:22 },
-  statTile: { background:"#fff", border:"1px solid #e2e8f0", borderRadius:10, padding:"14px 16px", boxShadow:"0 1px 3px rgba(0,0,0,.07)" },
+  statTile: { background:"#fff", border:"1px solid #e7ece8", borderRadius:14, padding:"14px 16px", boxShadow:"0 4px 18px rgba(15,51,32,.06)" },
   statNum: (c) => ({ fontSize:28, fontWeight:800, color:c, lineHeight:1 }),
   statLabel: { fontSize:11, color:"#718096", marginTop:4 },
 
   // form
-  formRow: { display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 },
-  formGroup: { marginBottom:14 },
-  formLabel: { display:"block", fontSize:12, fontWeight:700, color:"#4a5568", marginBottom:5, textTransform:"uppercase", letterSpacing:.4 },
-  formControl: { width:"100%", padding:"9px 12px", border:"1.5px solid #e2e8f0", borderRadius:8, fontSize:13, fontFamily:"inherit", background:"#fff", outline:"none" },
+  formRow: { display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 },
+  formGroup: { marginBottom:18 },
+  formLabel: { display:"block", fontSize:11.5, fontWeight:800, color:"#2f4a37", marginBottom:7, textTransform:"uppercase", letterSpacing:.5 },
+  formControl: { width:"100%", padding:"11px 13px", border:"1.5px solid #dfe6e0", borderRadius:10, fontSize:13.5, fontFamily:"inherit", background:"#f7faf8", outline:"none", transition:"border-color .15s, box-shadow .15s, background .15s" },
 
   // buttons
   btn: (variant="primary", sm=false) => {
     const colors = {
-      primary: { background:"#276749", color:"#fff" },
+      primary: { background:"linear-gradient(135deg,#2f6b45,#1a4731)", color:"#fff" },
       gold:    { background:"#c9a84c", color:"#fff" },
       ghost:   { background:"transparent", border:"1.5px solid #e2e8f0", color:"#4a5568" },
       danger:  { background:"#fed7d7", color:"#c53030" },
       success: { background:"#c6f6d5", color:"#276749" },
       info:    { background:"#bee3f8", color:"#2b6cb0" },
     };
-    return { ...colors[variant], padding: sm ? "5px 11px" : "8px 18px", border:"none", borderRadius: sm ? 6 : 8, fontSize: sm ? 12 : 13, fontWeight:600, fontFamily:"inherit", cursor:"pointer", display:"inline-flex", alignItems:"center", gap:5 };
+    return { ...colors[variant], padding: sm ? "5px 11px" : "10px 18px", border:"none", borderRadius: sm ? 6 : 10, fontSize: sm ? 12 : 13.5, fontWeight:700, fontFamily:"inherit", cursor:"pointer", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:7, letterSpacing:.2, boxShadow: variant==="primary" ? "0 10px 22px -6px rgba(26,71,49,.45)" : "none", transition:"transform .15s, box-shadow .15s" };
   },
-  btnFull: { width:"100%", justifyContent:"center", padding:11, fontSize:14 },
+  btnFull: { width:"100%", justifyContent:"center", padding:13, fontSize:14 },
 
   // badges
   badge: (s) => {
@@ -197,7 +199,7 @@ const S = {
   pendCard: { border:"1px solid #e2e8f0", borderRadius:10, padding:16, marginBottom:12 },
 
   // alert
-  alertInfo: { padding:"12px 16px", borderRadius:8, fontSize:13, marginBottom:16, background:"#f0fff4", border:"1px solid #c6f6d5", color:"#276749" },
+  alertInfo: { padding:"13px 18px", borderRadius:12, fontSize:13.5, marginBottom:18, background:"#eaf7ee", border:"1px solid #c6e8cf", color:"#1a4731" },
 
   // modal
   overlay: { position:"fixed", inset:0, background:"rgba(0,0,0,.5)", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:16, backdropFilter:"blur(3px)" },
@@ -478,11 +480,11 @@ export default function App() {
           <div style={S.formRow}>
             <div style={S.formGroup}>
               <label style={S.formLabel}>Tanggal Izin *</label>
-              <input style={S.formControl} type="date" value={form.tanggal} onChange={e=>setForm(f=>({...f,tanggal:e.target.value}))} />
+              <input style={S.formControl} className="form-field" type="date" value={form.tanggal} onChange={e=>setForm(f=>({...f,tanggal:e.target.value}))} />
             </div>
             <div style={S.formGroup}>
               <label style={S.formLabel}>Keperluan *</label>
-              <select style={S.formControl} value={form.keperluan} onChange={e=>setForm(f=>({...f,keperluan:e.target.value}))}>
+              <select style={S.formControl} className="form-field" value={form.keperluan} onChange={e=>setForm(f=>({...f,keperluan:e.target.value}))}>
                 {KEPERLUAN.map(k=><option key={k}>{k}</option>)}
               </select>
             </div>
@@ -491,11 +493,11 @@ export default function App() {
             <div style={S.formGroup}>
               <label style={S.formLabel}>Jam Keluar *</label>
               <div style={{display:"flex",gap:4}}>
-                <select style={{...S.formControl,flex:1}} value={form.jamKeluar.split(":")[0]||""} onChange={e=>{const h=e.target.value,m=form.jamKeluar.split(":")[1]||"00";setForm(f=>({...f,jamKeluar:h&&m?`${h}:${m}`:""}));}}>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKeluar.split(":")[0]||""} onChange={e=>{const h=e.target.value,m=form.jamKeluar.split(":")[1]||"00";setForm(f=>({...f,jamKeluar:h&&m?`${h}:${m}`:""}));}}>
                   <option value="">Jam</option>
                   {Array.from({length:24},(_,i)=>String(i).padStart(2,"0")).map(h=><option key={h} value={h}>{h}</option>)}
                 </select>
-                <select style={{...S.formControl,flex:1}} value={form.jamKeluar.split(":")[1]||""} onChange={e=>{const m=e.target.value,h=form.jamKeluar.split(":")[0]||"";setForm(f=>({...f,jamKeluar:h&&m?`${h}:${m}`:""}));}}>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKeluar.split(":")[1]||""} onChange={e=>{const m=e.target.value,h=form.jamKeluar.split(":")[0]||"";setForm(f=>({...f,jamKeluar:h&&m?`${h}:${m}`:""}));}}>
                   <option value="">Menit</option>
                   {["00","05","10","15","20","25","30","35","40","45","50","55"].map(m=><option key={m} value={m}>{m}</option>)}
                 </select>
@@ -504,11 +506,11 @@ export default function App() {
             <div style={S.formGroup}>
               <label style={S.formLabel}>Estimasi Kembali *</label>
               <div style={{display:"flex",gap:4}}>
-                <select style={{...S.formControl,flex:1}} value={form.jamKembali.split(":")[0]||""} onChange={e=>{const h=e.target.value,m=form.jamKembali.split(":")[1]||"00";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKembali.split(":")[0]||""} onChange={e=>{const h=e.target.value,m=form.jamKembali.split(":")[1]||"00";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
                   <option value="">Jam</option>
                   {Array.from({length:24},(_,i)=>String(i).padStart(2,"0")).map(h=><option key={h} value={h}>{h}</option>)}
                 </select>
-                <select style={{...S.formControl,flex:1}} value={form.jamKembali.split(":")[1]||""} onChange={e=>{const m=e.target.value,h=form.jamKembali.split(":")[0]||"";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKembali.split(":")[1]||""} onChange={e=>{const m=e.target.value,h=form.jamKembali.split(":")[0]||"";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
                   <option value="">Menit</option>
                   {["00","05","10","15","20","25","30","35","40","45","50","55"].map(m=><option key={m} value={m}>{m}</option>)}
                 </select>
@@ -517,15 +519,15 @@ export default function App() {
           </div>
           <div style={S.formGroup}>
             <label style={S.formLabel}>Tujuan / Lokasi *</label>
-            <input style={S.formControl} type="text" placeholder="cth: RSUD Banyumas, BRI Purwokerto…" value={form.tujuan} onChange={e=>setForm(f=>({...f,tujuan:e.target.value}))} />
+            <input style={S.formControl} className="form-field" type="text" placeholder="cth: RSUD Banyumas, BRI Purwokerto…" value={form.tujuan} onChange={e=>setForm(f=>({...f,tujuan:e.target.value}))} />
           </div>
           <div style={S.formGroup}>
             <label style={S.formLabel}>Keterangan Tambahan</label>
-            <textarea style={{...S.formControl,resize:"vertical",minHeight:70}} placeholder="Deskripsi tambahan jika diperlukan…" value={form.keterangan} onChange={e=>setForm(f=>({...f,keterangan:e.target.value}))} />
+            <textarea style={{...S.formControl,resize:"vertical",minHeight:70}} className="form-field" placeholder="Deskripsi tambahan jika diperlukan…" value={form.keterangan} onChange={e=>setForm(f=>({...f,keterangan:e.target.value}))} />
           </div>
           <div style={S.formGroup}>
             <label style={S.formLabel}>Diajukan kepada *</label>
-            <select style={S.formControl} value={form.atasanId} onChange={e=>setForm(f=>({...f,atasanId:e.target.value}))}>
+            <select style={S.formControl} className="form-field" value={form.atasanId} onChange={e=>setForm(f=>({...f,atasanId:e.target.value}))}>
               {USERS.filter(u=>u.role==="atasan"||u.role==="keduanya").map(u=><option key={u.id} value={u.id}>{u.nama}</option>)}
             </select>
           </div>
@@ -705,14 +707,16 @@ export default function App() {
           <div style={S.brandName}>CABLAKA</div>
           <div style={S.brandSub}>Catatan Berkas Layanan Keluar Kantor</div>
         </div>
-        <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:10}}>
-          <Clock />
-          {user && <div style={S.userPill} onClick={logout}>
+        <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:16}}>
+          <div style={S.clockWrap}><span style={{fontSize:14}}>🕐</span><Clock /></div>
+          {user && <div style={S.headerDivider}/>}
+          {user && <div style={S.userPill} className="user-pill" onClick={logout}>
             <div style={S.userAvatar}>{user.avatar}</div>
             <div>
-              <div style={{fontSize:12,fontWeight:600,color:"#fff"}}>{user.nama}</div>
+              <div style={{fontSize:12.5,fontWeight:700,color:"#fff"}}>{user.nama}</div>
               <div style={{fontSize:10,color:"#9ae6b4"}}>{user.role==="admin"?"Admin":user.role==="keduanya"?"Pegawai & Atasan":user.role==="atasan"?"Pimpinan":"Pegawai"}</div>
             </div>
+            <span style={{fontSize:11,color:"rgba(255,255,255,.6)",marginLeft:2}}>▾</span>
           </div>}
         </div>
       </header>
@@ -834,7 +838,7 @@ export default function App() {
             <div style={S.modalTitle}>❌ Alasan Penolakan</div>
             <div style={S.formGroup}>
               <label style={S.formLabel}>Alasan *</label>
-              <textarea style={{...S.formControl,resize:"vertical",minHeight:90}} placeholder="Jelaskan alasan penolakan…" value={alasanTolak} onChange={e=>setAlasanTolak(e.target.value)}/>
+              <textarea style={{...S.formControl,resize:"vertical",minHeight:90}} className="form-field" placeholder="Jelaskan alasan penolakan…" value={alasanTolak} onChange={e=>setAlasanTolak(e.target.value)}/>
             </div>
             <Btn variant="danger" full onClick={konfirmasiTolak}>Konfirmasi Penolakan</Btn>
           </div>
@@ -847,8 +851,11 @@ export default function App() {
         .login-fade{animation:loginFadeIn .55s ease both;}
         .login-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.15);}
         .login-field::placeholder{color:#a9b6ae;}
+        .form-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.12);}
+        .form-field::placeholder{color:#a3b0a8;}
         .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -6px rgba(26,71,49,.55);}
         .login-btn:active{transform:translateY(0);}
+        .user-pill:hover{background:rgba(255,255,255,.18)!important;}
         @media (max-width: 760px){
           .login-shell{flex-direction:column!important;min-height:auto!important;}
         }
