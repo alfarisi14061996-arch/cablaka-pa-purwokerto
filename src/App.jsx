@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
+import QRCode from "qrcode"; // npm install qrcode  (generator QR murni client-side, tanpa server)
 
 // ══════════ SUPABASE CONFIG ══════════
 // Ambil dari Project Settings > API di dashboard Supabase kamu.
@@ -299,7 +300,7 @@ const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}><s
 
 // id user yang keterangan perannya ditampilkan sebagai "Hakim" (bukan "Pegawai") meski role-nya pegawai
 const HAKIM_IDS = [2,3,4,5,6,9,10,11];
-export default function App() {
+function App() {
   // Set favicon & title tab browser ke logo/identitas CABLAKA (bukan logo default)
   useEffect(() => {
     document.title = "CABLAKA - Catatan Berkas Layanan Keluar Kantor";
@@ -428,7 +429,7 @@ export default function App() {
     const izin = db.izin.find(x => x.id === id);
     if (!izin || !confirm(`Setujui izin ${izin.pegawaiNama}?`)) return;
     const fresh = await load("Memuat…");
-    const updated = { izin: fresh.izin.map(x => x.id === id ? { ...x, status:"disetujui", disetujuiOleh:user.nama, updatedAt:Date.now() } : x) };
+    const updated = { izin: fresh.izin.map(x => x.id === id ? { ...x, status:"disetujui", disetujuiOleh:user.nama, disetujuiOlehJabatan:user.jabatan||"", updatedAt:Date.now() } : x) };
     const ok = await save(updated, "Menyimpan…");
     if (ok) { addToast("Izin disetujui!"); setTab("approval"); }
   };
@@ -453,7 +454,8 @@ export default function App() {
   };
 
   // CETAK SURAT
-  const cetakSurat = (id) => {
+  // CETAK SURAT
+  const cetakSurat = async (id) => {
     const x = db.izin.find(i => i.id === id);
     if (!x || x.status !== "disetujui") { addToast("Hanya izin yang disetujui yang dapat dicetak.", true); return; }
     const at = USERS.find(u => u.id === x.atasanId);
@@ -462,6 +464,20 @@ export default function App() {
     const pegNip = x.pegawaiNip || peg?.nip || "-";
     const pegJabatan = x.pegawaiJabatan || peg?.jabatan || "-";
     const tglSlash = (s) => { if (!s) return "-"; const [y,m,d] = s.split("-"); return `${d}/${m}/${y}`; };
+
+    // QR sekarang berisi LINK ke halaman validasi publik (/validasi/IZN-001),
+    // bukan teks data mentah. Saat di-scan, orang yang membaca surat akan diarahkan
+    // ke halaman web yang mengambil data terbaru lewat Edge Function "validasi-izin",
+    // sehingga tidak bisa dipalsukan dengan mengedit teks pada gambar.
+    const qrUrl = `https://cablaka-pa-purwokerto.vercel.app/validasi/${encodeURIComponent(x.id)}`;
+
+    let qrDataUrl = "";
+    try {
+      qrDataUrl = await QRCode.toDataURL(qrUrl, { margin: 1, width: 130, errorCorrectionLevel: "M" });
+    } catch (err) {
+      console.error("Gagal membuat QR validasi:", err);
+    }
+
     let printEl = document.getElementById("print-area");
     if (!printEl) {
       printEl = document.createElement("div");
@@ -504,7 +520,10 @@ export default function App() {
         <div style="text-align:left;min-width:220px;">
           <p style="margin:0;">Purwokerto, ${tglSlash(x.tanggal)}</p>
           <p style="margin:0;">${at?.jabatan||"Pimpinan"},</p>
-          <div style="height:64px;"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:6px 0;">
+            ${qrDataUrl ? `<img src="${qrDataUrl}" style="width:80px;height:80px;" alt="QR Validasi"/>` : `<div style="height:64px;"></div>`}
+            <span style="font-size:9px;letter-spacing:.3px;color:#444;">Scan untuk validasi digital</span>
+          </div>
           <p style="margin:0;font-weight:700;">${at?.nama||"—"}</p>
         </div>
       </div>
@@ -950,3 +969,90 @@ export default function App() {
     </div>
   );
 }
+
+// ══════════════════════════════════════════════════════════════
+// HALAMAN VALIDASI PUBLIK (tanpa login)
+// Diakses lewat URL: /validasi/IZN-001
+// Ambil data dari Edge Function "validasi-izin" (bukan langsung dari tabel database),
+// supaya data pegawai lain tidak ikut terbuka ke publik.
+// ══════════════════════════════════════════════════════════════
+function ValidasiPublik({ izinId }) {
+  const [state, setState] = useState({ loading: true, data: null, error: "" });
+
+  useEffect(() => {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    // Nama project Supabase diambil otomatis dari VITE_SUPABASE_URL,
+    // sehingga URL Edge Function-nya menyesuaikan otomatis.
+    const fnUrl = `${supabaseUrl}/functions/v1/validasi-izin?id=${encodeURIComponent(izinId)}`;
+    fetch(fnUrl)
+      .then(r => r.json())
+      .then(json => {
+        if (!json.found) setState({ loading:false, data:null, error:"Surat izin tidak ditemukan." });
+        else setState({ loading:false, data:json, error:"" });
+      })
+      .catch(() => setState({ loading:false, data:null, error:"Gagal memuat data validasi. Coba lagi nanti." }));
+  }, [izinId]);
+
+  const wrap = { minHeight:"100vh", background:"linear-gradient(160deg,#f3f6f3,#e7efe9)", display:"flex", alignItems:"center", justifyContent:"center", padding:20, fontFamily:"'Segoe UI',Roboto,sans-serif" };
+  const card = { background:"#fff", borderRadius:18, padding:"32px 28px", maxWidth:420, width:"100%", boxShadow:"0 20px 50px -12px rgba(20,40,30,.25)", textAlign:"center" };
+  const row = { display:"flex", justifyContent:"space-between", gap:12, padding:"9px 0", borderBottom:"1px solid #eef2ef", fontSize:13.5, textAlign:"left" };
+
+  return (
+    <div style={wrap}>
+      <div style={card}>
+        <img src={LOGO_SRC} alt="logo" style={{width:54,height:54,borderRadius:"50%",objectFit:"cover",marginBottom:10}}/>
+        <div style={{fontWeight:800,fontSize:15,color:"#1a4731",letterSpacing:.3}}>CABLAKA</div>
+        <div style={{fontSize:11.5,color:"#6b7a70",marginBottom:18}}>Validasi Surat Izin Keluar Kantor</div>
+
+        {state.loading && <div style={{padding:"30px 0",color:"#6b7a70",fontSize:13.5}}>Memuat data validasi…</div>}
+
+        {!state.loading && state.error && (
+          <div style={{padding:"20px 0"}}>
+            <div style={{fontSize:32,marginBottom:8}}>⚠️</div>
+            <div style={{color:"#c53030",fontWeight:700,fontSize:14}}>{state.error}</div>
+            <div style={{color:"#8a948e",fontSize:12,marginTop:6}}>Pastikan QR code berasal dari surat resmi yang belum diubah.</div>
+          </div>
+        )}
+
+        {!state.loading && state.data && (
+          <>
+            <div style={{
+              display:"inline-flex", alignItems:"center", gap:6, padding:"5px 14px", borderRadius:99, fontSize:12, fontWeight:700, marginBottom:16,
+              background: state.data.status==="disetujui" ? "#c6f6d5" : "#fed7d7",
+              color: state.data.status==="disetujui" ? "#276749" : "#c53030",
+            }}>
+              {state.data.status==="disetujui" ? "✅ SURAT VALID — DISETUJUI" : "❌ TIDAK VALID"}
+            </div>
+            <div style={{marginBottom:4}}>
+              <div style={row}><span style={{color:"#8a948e"}}>No. Izin</span><span style={{fontWeight:700}}>{state.data.id}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Nama</span><span style={{fontWeight:700}}>{state.data.pegawaiNama || "-"}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Jabatan</span><span>{state.data.pegawaiJabatan || "-"}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Tanggal</span><span>{fmtTgl(state.data.tanggal)}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Jam</span><span>{state.data.jamKeluar} - {state.data.jamKembali}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Keperluan</span><span>{state.data.keperluan || "-"}</span></div>
+              <div style={{...row, borderBottom:"none"}}><span style={{color:"#8a948e"}}>Disetujui oleh</span><span style={{fontWeight:700}}>{state.data.disetujuiOleh || "-"}{state.data.disetujuiOlehJabatan ? ` (${state.data.disetujuiOlehJabatan})` : ""}</span></div>
+            </div>
+            <div style={{fontSize:10.5,color:"#a9b6ae",marginTop:14}}>Halaman ini menampilkan data terbatas demi privasi pegawai.</div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// ROOT: cek URL terlebih dahulu — kalau /validasi/IZN-xxx, tampilkan
+// halaman validasi publik saja (tanpa login). Selain itu, tampilkan
+// aplikasi CABLAKA seperti biasa. Pengecekan dilakukan di sini (bukan
+// dengan menambah file/komponen export baru) agar tidak perlu mengubah
+// main.jsx atau file lain di luar App.jsx.
+// ══════════════════════════════════════════════════════════════
+export default function AppRoot() {
+  const path = window.location.pathname;
+  const match = path.match(/^\/validasi\/(.+)$/);
+  if (match) {
+    return <ValidasiPublik izinId={decodeURIComponent(match[1])} />;
+  }
+  return <App />;
+}
+
