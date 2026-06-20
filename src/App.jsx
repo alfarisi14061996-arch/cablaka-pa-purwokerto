@@ -138,7 +138,7 @@ const S = {
 
   // main layout
   layout: { display:"flex", height:"calc(100vh - 68px)", overflow:"clip" },
-  sidebar: { width:228, flexShrink:0, background:"linear-gradient(180deg,#15351f,#1a4731 55%,#173d28)", borderRight:"1px solid rgba(0,0,0,.2)", display:"flex", flexDirection:"column", padding:"18px 12px", gap:4, overflowY:"auto", boxShadow:"2px 0 16px rgba(0,0,0,.12)" },
+  sidebar: { width:228, flexShrink:0, background:"linear-gradient(180deg,#1a4731 0%,#2d6a4f 50%,#4a7c6a 100%)", borderRight:"1px solid rgba(0,0,0,.2)", display:"flex", flexDirection:"column", padding:"18px 12px", gap:4, overflowY:"auto", boxShadow:"2px 0 16px rgba(0,0,0,.12)" },
   sidebarLabel: { fontSize:10.5, fontWeight:800, textTransform:"uppercase", letterSpacing:1.6, color:"rgba(154,230,180,.55)", padding:"4px 10px 10px" },
   sidebarBtn: (active) => ({
     display:"flex", alignItems:"center", gap:11, padding:"10px 12px", border:"none",
@@ -222,6 +222,27 @@ function Clock() {
     return () => clearInterval(t);
   }, []);
   return <span style={{fontFamily:"monospace",fontSize:13,color:"#9ae6b4"}}>{c}</span>;
+}
+
+// ══════════ MENU ICON (SVG line-icons, mirip Feather/Lucide) ══════════
+const MENU_ICON_PATHS = {
+  dashboard: <><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></>,
+  pegawai:  <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+  form:     <><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></>,
+  riwayat:  <><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>,
+  approval: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+  done:     <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>,
+  semua:    <><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></>,
+  keluar:   <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>,
+};
+function MenuIcon({ name, size=18 }) {
+  const path = MENU_ICON_PATHS[name];
+  if (!path) return null;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {path}
+    </svg>
+  );
 }
 
 // ══════════ MAIN APP ══════════
@@ -342,19 +363,19 @@ export default function App() {
   const getTabs = () => {
     if (!user) return [];
     if (user.role === "admin") return [
-      { key:"dashboard", icon:"📊", label:"Dashboard" },
-      { key:"semua",     icon:"📋", label:"Semua Pengajuan" },
-      { key:"pegawai",   icon:"👥", label:"Data Pegawai" },
+      { key:"dashboard", icon:"dashboard", label:"Dashboard" },
+      { key:"semua",     icon:"semua", label:"Semua Pengajuan" },
+      { key:"pegawai",   icon:"pegawai", label:"Data Pegawai" },
     ];
     const tabs = [];
     if (isPegawai(user)) {
-      tabs.push({ key:"form",    icon:"📝", label:"Ajukan Izin" });
-      tabs.push({ key:"riwayat", icon:"📋", label:"Izin Saya" });
+      tabs.push({ key:"form",    icon:"form", label:"Ajukan Izin" });
+      tabs.push({ key:"riwayat", icon:"riwayat", label:"Izin Saya" });
     }
     if (isAtasan(user)) {
-      tabs.push({ key:"approval", icon:"⏳", label:"Perlu Disetujui", badge: db.izin.filter(x=>x.atasanId===user.id&&x.status==="menunggu").length });
-      tabs.push({ key:"done",     icon:"✅", label:"Sudah Diproses" });
-      tabs.push({ key:"semua",    icon:"📋", label:"Semua Pengajuan" });
+      tabs.push({ key:"approval", icon:"approval", label:"Perlu Disetujui", badge: db.izin.filter(x=>x.atasanId===user.id&&x.status==="menunggu").length });
+      tabs.push({ key:"done",     icon:"done", label:"Sudah Diproses" });
+      tabs.push({ key:"semua",    icon:"semua", label:"Semua Pengajuan" });
     }
     return tabs;
   };
@@ -786,14 +807,14 @@ export default function App() {
           <div style={S.sidebarLabel}>Menu</div>
           {tabs.map(t=>(
             <button key={t.key} className={tab===t.key?"sb-btn-active":"sb-btn"} style={S.sidebarBtn(tab===t.key)} onClick={()=>setTab(t.key)}>
-              <span style={{fontSize:17,width:24,textAlign:"center",filter: tab===t.key?"none":"grayscale(.15)"}}>{t.icon}</span>
+              <span style={{width:24,display:"flex",alignItems:"center",justifyContent:"center",opacity: tab===t.key?1:.85}}><MenuIcon name={t.icon} size={17}/></span>
               {t.label}
               {t.badge>0 && <span style={S.sbBadge}>{t.badge}</span>}
             </button>
           ))}
           <div style={{flex:1}}/>
           <div style={S.sidebarDivider}/>
-          <button className="sb-btn sb-btn-danger" style={{...S.sidebarBtn(false),color:"#feb2b2"}} onClick={logout}><span style={{fontSize:17,width:24,textAlign:"center"}}>🔓</span>Keluar</button>
+          <button className="sb-btn sb-btn-danger" style={{...S.sidebarBtn(false),color:"#feb2b2"}} onClick={logout}><span style={{width:24,display:"flex",alignItems:"center",justifyContent:"center"}}><MenuIcon name="keluar" size={17}/></span>Keluar</button>
         </nav>
 
         {/* CONTENT */}
