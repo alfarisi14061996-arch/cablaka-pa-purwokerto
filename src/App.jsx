@@ -981,10 +981,19 @@ function ValidasiPublik({ izinId }) {
 
   useEffect(() => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
     // Nama project Supabase diambil otomatis dari VITE_SUPABASE_URL,
     // sehingga URL Edge Function-nya menyesuaikan otomatis.
     const fnUrl = `${supabaseUrl}/functions/v1/validasi-izin?id=${encodeURIComponent(izinId)}`;
-    fetch(fnUrl)
+    // Edge Function Supabase WAJIB diberi header Authorization (anon key),
+    // kalau tidak, request akan ditolak di gateway sebelum sampai ke kode function
+    // (gejalanya: tidak ada apa pun di tab Logs Edge Function).
+    fetch(fnUrl, {
+      headers: {
+        Authorization: `Bearer ${supabaseAnonKey}`,
+        apikey: supabaseAnonKey,
+      },
+    })
       .then(r => r.json())
       .then(json => {
         if (!json.found) setState({ loading:false, data:null, error:"Surat izin tidak ditemukan." });
