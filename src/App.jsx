@@ -234,6 +234,7 @@ const MENU_ICON_PATHS = {
   done:     <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>,
   semua:    <><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></>,
   keluar:   <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>,
+  send:     <><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>,
 };
 function MenuIcon({ name, size=18 }) {
   const path = MENU_ICON_PATHS[name];
@@ -552,7 +553,7 @@ export default function App() {
               {USERS.filter(u=>u.role==="atasan"||u.role==="keduanya").map(u=><option key={u.id} value={u.id}>{u.nama}</option>)}
             </select>
           </div>
-          <Btn variant="primary" full onClick={ajukanIzin}>🚀 Kirim Pengajuan</Btn>
+          <Btn variant="primary" full onClick={ajukanIzin}><span style={{display:"inline-flex",alignItems:"center",marginRight:8,verticalAlign:"-3px"}}><MenuIcon name="send" size={16}/></span>Kirim Pengajuan</Btn>
         </Card>
       </div>
     );
@@ -785,7 +786,7 @@ export default function App() {
               <label style={S.loginLabel}>Pilih Pengguna</label>
               <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
                 <option value="">— Pilih nama Anda —</option>
-                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?"Pegawai":u.role==="atasan"?"Pimpinan":"Admin"}</option>)}
+                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?"Pegawai":u.role==="atasan"?"Pimpinan":u.role==="keduanya"?"Pegawai & Atasan":"Admin"}</option>)}
               </select>
               <label style={S.loginLabel}>Password</label>
               <div style={{position:"relative",marginBottom:4}}>
