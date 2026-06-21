@@ -830,8 +830,8 @@ function App() {
               </div>
               <label style={S.loginLabel}>Pilih Pengguna</label>
               <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
-                <option value="">— Pilih nama Anda —</option>
-                {USERS.map(u=><option key={u.id} value={u.id}>{u.nama} — {u.role==="pegawai"?(HAKIM_IDS.includes(u.id)?"Hakim":"Pegawai"):u.role==="atasan"?"Pimpinan":u.role==="keduanya"?(u.id===1?"Hakim & Atasan":"Pegawai & Atasan"):"Admin"}</option>)}
+                <option value="" style={{color:"#1a2e1f",background:"#ffffff"}}>— Pilih nama Anda —</option>
+                {USERS.map(u=><option key={u.id} value={u.id} style={{color:"#1a2e1f",background:"#ffffff"}}>{u.nama} — {u.role==="pegawai"?(HAKIM_IDS.includes(u.id)?"Hakim":"Pegawai"):u.role==="atasan"?"Pimpinan":u.role==="keduanya"?(u.id===1?"Hakim & Atasan":"Pegawai & Atasan"):"Admin"}</option>)}
               </select>
               <label style={S.loginLabel}>Password</label>
               <div style={{position:"relative",marginBottom:4}}>
@@ -921,6 +921,8 @@ function App() {
         .login-fade{animation:loginFadeIn .55s ease both;}
         .login-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.15);}
         .login-field::placeholder{color:#a9b6ae;}
+        select{color:#1a2e1f;}
+        select option{color:#1a2e1f!important;background:#ffffff!important;}
         .form-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.12);}
         .form-field::placeholder{color:#a3b0a8;}
         .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -6px rgba(26,71,49,.55);}
