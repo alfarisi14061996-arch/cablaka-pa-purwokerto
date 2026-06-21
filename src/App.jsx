@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import QRCode from "qrcode"; // npm install qrcode  (generator QR murni client-side, tanpa server)
 
@@ -248,6 +248,9 @@ const MENU_ICON_PATHS = {
   clock:    <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
   calendar: <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
   mapPin:   <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></>,
+  chevronDown: <><polyline points="6 9 12 15 18 9"/></>,
+  search:   <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
+  helpCircle: <><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
   fileText: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></>,
   barChart: <><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></>,
   refresh:  <><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></>,
@@ -267,6 +270,140 @@ function MenuIcon({ name, size=18 }) {
 const IconLabel = ({ icon, size=14, gap=7, children }) => (
   <span style={{display:"inline-flex",alignItems:"center",gap}}><MenuIcon name={icon} size={size}/>{children}</span>
 );
+
+// id user yang keterangan perannya ditampilkan sebagai "Hakim" (bukan "Pegawai") meski role-nya pegawai
+const HAKIM_IDS = [2,3,4,5,6,9,10,11];
+
+// Helper: label peran pengguna (dipakai di dropdown login & tempat lain)
+function roleLabel(u) {
+  if (u.role === "pegawai") return HAKIM_IDS.includes(u.id) ? "Hakim" : "Pegawai";
+  if (u.role === "atasan") return "Pimpinan";
+  if (u.role === "keduanya") return u.id === 1 ? "Hakim & Atasan" : "Pegawai & Atasan";
+  return "Admin";
+}
+function initials(name) {
+  const parts = String(name).replace(/,.*/, "").trim().split(/\s+/).filter(Boolean);
+  return ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase() || "?";
+}
+const ROLE_COLORS = {
+  "Pegawai": { bg:"#EAF2EC", fg:"#2f6b45" },
+  "Hakim": { bg:"#EAF2EC", fg:"#2f6b45" },
+  "Pimpinan": { bg:"#FBF3DF", fg:"#9c7a1f" },
+  "Pegawai & Atasan": { bg:"#E9F0FB", fg:"#3563ad" },
+  "Hakim & Atasan": { bg:"#E9F0FB", fg:"#3563ad" },
+  "Admin": { bg:"#F3EAF8", fg:"#7c3f9e" },
+};
+
+// ══════════ USER SELECT (dropdown custom modern, menggantikan <select> native) ══════════
+function UserSelect({ users, value, onChange, placeholder = "Cari atau pilih nama Anda…" }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const rootRef = useRef(null);
+  const searchRef = useRef(null);
+
+  useEffect(() => {
+    const onDocClick = (e) => { if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+
+  useEffect(() => { if (open) { setQuery(""); setTimeout(() => searchRef.current?.focus(), 30); } }, [open]);
+
+  const selected = users.find(u => String(u.id) === String(value));
+  const filtered = users.filter(u => u.nama.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div ref={rootRef} style={{ position: "relative" }}>
+      <button
+        type="button"
+        className="login-field"
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%", display: "flex", alignItems: "center", gap: 10, textAlign: "left",
+          padding: "9px 12px", borderRadius: 10, border: "1.5px solid #dfe6e0", background: "#f7faf8",
+          fontFamily: "inherit", fontSize: 14, cursor: "pointer", marginBottom: 16,
+          outline: open ? "none" : undefined, borderColor: open ? "#2f6b45" : "#dfe6e0",
+          boxShadow: open ? "0 0 0 3px rgba(47,107,69,.15)" : "none", transition: "border-color .2s, box-shadow .2s",
+        }}
+      >
+        {selected ? (
+          <>
+            <span style={{
+              width: 26, height: 26, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+              background: (ROLE_COLORS[roleLabel(selected)] || ROLE_COLORS.Pegawai).bg,
+              color: (ROLE_COLORS[roleLabel(selected)] || ROLE_COLORS.Pegawai).fg,
+              fontSize: 10.5, fontWeight: 800,
+            }}>{initials(selected.nama)}</span>
+            <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#1a2e1f", fontWeight: 600 }}>{selected.nama}</span>
+            <span style={{
+              fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 99, flexShrink: 0,
+              background: (ROLE_COLORS[roleLabel(selected)] || ROLE_COLORS.Pegawai).bg,
+              color: (ROLE_COLORS[roleLabel(selected)] || ROLE_COLORS.Pegawai).fg,
+            }}>{roleLabel(selected)}</span>
+          </>
+        ) : (
+          <span style={{ flex: 1, color: "#a9b6ae" }}>— Pilih nama Anda —</span>
+        )}
+        <span style={{ color: "#9aa9a0", flexShrink: 0, display: "flex", transform: open ? "rotate(180deg)" : "none", transition: "transform .18s" }}>
+          <MenuIcon name="chevronDown" size={16} />
+        </span>
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", top: "calc(100% - 10px)", left: 0, right: 0, zIndex: 40,
+          background: "#fff", border: "1px solid #e3e9e5", borderRadius: 12,
+          boxShadow: "0 16px 40px -12px rgba(20,40,30,.25)", overflow: "hidden",
+        }}>
+          <div style={{ padding: 8, borderBottom: "1px solid #eef2ef" }}>
+            <div style={{ position: "relative" }}>
+              <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#9aa9a0", display: "flex" }}>
+                <MenuIcon name="search" size={14} />
+              </span>
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === "Escape") setOpen(false); if (e.key === "Enter" && filtered.length === 1) { onChange(String(filtered[0].id)); setOpen(false); } }}
+                placeholder={placeholder}
+                style={{ width: "100%", padding: "8px 10px 8px 32px", borderRadius: 8, border: "1px solid #e3e9e5", background: "#f7faf8", fontFamily: "inherit", fontSize: 13.5, outline: "none", color: "#1a2e1f" }}
+              />
+            </div>
+          </div>
+          <div style={{ maxHeight: 248, overflowY: "auto", padding: 6 }}>
+            {filtered.length === 0 && (
+              <div style={{ padding: "16px 10px", textAlign: "center", color: "#a9b6ae", fontSize: 13 }}>Tidak ada nama yang cocok.</div>
+            )}
+            {filtered.map(u => {
+              const rl = roleLabel(u);
+              const col = ROLE_COLORS[rl] || ROLE_COLORS.Pegawai;
+              const isSelected = String(u.id) === String(value);
+              return (
+                <button
+                  key={u.id}
+                  type="button"
+                  className="user-option"
+                  onClick={() => { onChange(String(u.id)); setOpen(false); }}
+                  style={{
+                    width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "8px 9px", borderRadius: 8,
+                    border: "none", background: isSelected ? "#EAF2EC" : "transparent", cursor: "pointer", textAlign: "left",
+                    fontFamily: "inherit", marginBottom: 2,
+                  }}
+                >
+                  <span style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: col.bg, color: col.fg, fontSize: 11, fontWeight: 800 }}>
+                    {initials(u.nama)}
+                  </span>
+                  <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13.5, color: "#1a2e1f", fontWeight: isSelected ? 700 : 500 }}>{u.nama}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 99, flexShrink: 0, background: col.bg, color: col.fg }}>{rl}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ══════════ MAIN APP ══════════
 // ══════════ KOMPONEN UI (di luar App agar tidak remount tiap render) ══════════
@@ -298,8 +435,6 @@ const EmptyState = ({ icon, msg }) => (
 
 const RefreshBtn = ({ onClick }) => <Btn variant="ghost" sm onClick={onClick}><span style={{display:"inline-flex",alignItems:"center",gap:6}}><MenuIcon name="refresh" size={13}/>Refresh</span></Btn>;
 
-// id user yang keterangan perannya ditampilkan sebagai "Hakim" (bukan "Pegawai") meski role-nya pegawai
-const HAKIM_IDS = [2,3,4,5,6,9,10,11];
 function App() {
   // Set favicon & title tab browser ke logo/identitas CABLAKA (bukan logo default)
   useEffect(() => {
@@ -321,6 +456,7 @@ function App() {
   const [loadMsg, setLoadMsg] = useState("Memuat…");
   const [toasts, setToasts] = useState([]);
   const [modal, setModal] = useState(null); // null | "detail" | "tolak"
+  const [confirmState, setConfirmState] = useState(null); // {title, message, confirmLabel, danger, resolve}
   const [selectedIzin, setSelectedIzin] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar toggle
 
@@ -377,8 +513,17 @@ function App() {
     setDb(data);
   };
 
-  const logout = () => {
-    if (!confirm("Keluar dari CABLAKA?")) return;
+  // Pengganti window.confirm() bawaan browser — menampilkan modal custom yang konsisten
+  // dengan tema aplikasi, dan tetap bisa dipakai dengan pola "if (!await askConfirm(...)) return;"
+  const askConfirm = ({ title, message, confirmLabel = "Ya, lanjutkan", cancelLabel = "Batal", danger = false }) => {
+    return new Promise((resolve) => {
+      setConfirmState({ title, message, confirmLabel, cancelLabel, danger, resolve });
+    });
+  };
+
+  const logout = async () => {
+    const ok = await askConfirm({ title: "Keluar dari CABLAKA?", message: "Anda perlu masuk kembali untuk mengakses aplikasi ini." });
+    if (!ok) return;
     setUser(null); setPw(""); setSelUser(""); setLoginErr(false); setDb({ izin: [] });
   };
 
@@ -427,11 +572,13 @@ function App() {
   // SETUJUI
   const setujui = async (id) => {
     const izin = db.izin.find(x => x.id === id);
-    if (!izin || !confirm(`Setujui izin ${izin.pegawaiNama}?`)) return;
+    if (!izin) return;
+    const ok = await askConfirm({ title: "Setujui pengajuan ini?", message: `Izin atas nama ${izin.pegawaiNama} akan disetujui dan tercatat menggunakan nama Anda sebagai penyetuju.`, confirmLabel: "Ya, Setujui" });
+    if (!ok) return;
     const fresh = await load("Memuat…");
     const updated = { izin: fresh.izin.map(x => x.id === id ? { ...x, status:"disetujui", disetujuiOleh:user.nama, disetujuiOlehJabatan:user.jabatan||"", updatedAt:Date.now() } : x) };
-    const ok = await save(updated, "Menyimpan…");
-    if (ok) { addToast("Izin disetujui!"); setTab("approval"); }
+    const ok2 = await save(updated, "Menyimpan…");
+    if (ok2) { addToast("Izin disetujui!"); setTab("approval"); }
   };
 
   // TOLAK
@@ -446,11 +593,12 @@ function App() {
 
   // HAPUS
   const hapus = async (id) => {
-    if (!confirm("Hapus data ini secara permanen?")) return;
+    const ok = await askConfirm({ title: "Hapus data ini?", message: "Data yang dihapus tidak dapat dikembalikan lagi. Tindakan ini bersifat permanen.", confirmLabel: "Ya, Hapus", danger: true });
+    if (!ok) return;
     const fresh = await load("Memuat…");
     const updated = { izin: fresh.izin.filter(x => x.id !== id) };
-    const ok = await save(updated, "Menghapus…");
-    if (ok) { addToast("Data dihapus."); }
+    const ok2 = await save(updated, "Menghapus…");
+    if (ok2) { addToast("Data dihapus."); }
   };
 
   // CETAK SURAT
@@ -781,7 +929,7 @@ function App() {
             <div style={S.userAvatar}>{user.avatar}</div>
             <div className="user-info-text">
               <div style={{fontSize:12.5,fontWeight:700,color:"#fff"}}>{user.nama}</div>
-              <div style={{fontSize:10,color:"#9ae6b4"}}>{user.role==="admin"?"Admin":user.role==="keduanya"?(user.id===1?"Hakim & Atasan":"Pegawai & Atasan"):user.role==="atasan"?"Pimpinan":(HAKIM_IDS.includes(user.id)?"Hakim":"Pegawai")}</div>
+              <div style={{fontSize:10,color:"#9ae6b4"}}>{roleLabel(user)}</div>
             </div>
             <span style={{fontSize:11,color:"rgba(255,255,255,.6)",marginLeft:2}} className="user-info-text">▾</span>
           </div>}
@@ -829,10 +977,7 @@ function App() {
                 <div style={S.loginCardSub}>Silakan pilih akun Anda untuk melanjutkan</div>
               </div>
               <label style={S.loginLabel}>Pilih Pengguna</label>
-              <select style={S.loginSelect} className="login-field" value={selUser} onChange={e=>{setSelUser(e.target.value);setLoginErr(false);setPw("");}}>
-                <option value="" style={{color:"#1a2e1f",background:"#ffffff"}}>— Pilih nama Anda —</option>
-                {USERS.map(u=><option key={u.id} value={u.id} style={{color:"#1a2e1f",background:"#ffffff"}}>{u.nama} — {u.role==="pegawai"?(HAKIM_IDS.includes(u.id)?"Hakim":"Pegawai"):u.role==="atasan"?"Pimpinan":u.role==="keduanya"?(u.id===1?"Hakim & Atasan":"Pegawai & Atasan"):"Admin"}</option>)}
-              </select>
+              <UserSelect users={USERS} value={selUser} onChange={(v)=>{setSelUser(v);setLoginErr(false);setPw("");}} />
               <label style={S.loginLabel}>Password</label>
               <div style={{position:"relative",marginBottom:4}}>
                 <input style={S.loginInput} className="login-field" type={pwShow?"text":"password"} placeholder="Masukkan password…" value={pw}
@@ -915,6 +1060,44 @@ function App() {
         </div>
       )}
 
+      {confirmState && (
+        <div
+          style={{ position:"fixed", inset:0, background:"rgba(20,30,25,.45)", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:16, backdropFilter:"blur(3px)" }}
+          onClick={() => { confirmState.resolve(false); setConfirmState(null); }}
+        >
+          <div
+            className="confirm-modal-pop"
+            style={{ background:"#fff", borderRadius:16, padding:"26px 24px 22px", width:"100%", maxWidth:360, boxShadow:"0 20px 50px -12px rgba(20,40,30,.35)", textAlign:"center" }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{
+              width:48, height:48, borderRadius:"50%", margin:"0 auto 16px", display:"flex", alignItems:"center", justifyContent:"center",
+              background: confirmState.danger ? "#FBEAEA" : "#EAF2EC",
+              color: confirmState.danger ? "#c0392b" : "#2f6b45",
+            }}>
+              <MenuIcon name={confirmState.danger ? "alertTriangle" : "helpCircle"} size={22} />
+            </div>
+            <div style={{ fontSize:16.5, fontWeight:800, color:"#1a2e1f", marginBottom:8 }}>{confirmState.title}</div>
+            {confirmState.message && <div style={{ fontSize:13.5, color:"#5f6e66", lineHeight:1.5, marginBottom:22 }}>{confirmState.message}</div>}
+            <div style={{ display:"flex", gap:10 }}>
+              <button
+                className="confirm-btn-cancel"
+                style={{ flex:1, padding:"11px 0", borderRadius:10, border:"1.5px solid #e3e9e5", background:"#fff", color:"#5f6e66", fontFamily:"inherit", fontSize:13.5, fontWeight:700, cursor:"pointer", transition:"background .15s" }}
+                onClick={() => { confirmState.resolve(false); setConfirmState(null); }}
+              >{confirmState.cancelLabel}</button>
+              <button
+                className="confirm-btn-ok"
+                style={{
+                  flex:1, padding:"11px 0", borderRadius:10, border:"none", color:"#fff", fontFamily:"inherit", fontSize:13.5, fontWeight:700, cursor:"pointer", transition:"filter .15s",
+                  background: confirmState.danger ? "#d64545" : "#2f6b45",
+                }}
+                onClick={() => { confirmState.resolve(true); setConfirmState(null); }}
+              >{confirmState.confirmLabel}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* PRINT AREA: dibuat dinamis langsung di document.body via cetakSurat() agar tidak bersarang di dalam wrapper aplikasi */}
       <style>{`*{box-sizing:border-box;}@media print{body>*:not(#print-area){display:none!important;}#print-area{display:block!important;position:absolute;left:0;top:0;width:100%;}}
         @keyframes loginFadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
@@ -928,6 +1111,12 @@ function App() {
         .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -6px rgba(26,71,49,.55);}
         .login-btn:active{transform:translateY(0);}
         .user-pill:hover{background:rgba(255,255,255,.18)!important;}
+        .user-option:hover{background:#F2F6F3!important;}
+        @keyframes confirmPopIn{from{opacity:0;transform:scale(.94) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
+        .confirm-modal-pop{animation:confirmPopIn .18s cubic-bezier(.22,1,.36,1) both;}
+        .confirm-btn-cancel:hover{background:#f5f7f5!important;}
+        .confirm-btn-ok:hover{filter:brightness(1.08);}
+        .confirm-btn-ok:active,.confirm-btn-cancel:active{transform:scale(.98);}
         @media (max-width: 760px){
           .login-shell{flex-direction:column!important;min-height:auto!important;}
         }
