@@ -45,7 +45,7 @@ const USERS = [
   { id:21, nama:"DEBI NURANI MANDIANTIK,A.Md", nip:"199612192020122000", jabatan:"Pranata Keuangan APBN", role:"pegawai", avatar:"👩‍💼", email:"", pw:"debi" },
   { id:22, nama:"KANE SOEDJARNOTO,A.Md", nip:"198802222020121000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👨‍💼", email:"", pw:"kane" },
   { id:23, nama:"YULITA INTAN PERMATASARI, A.Md.", nip:"199007112020122000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👩‍💼", email:"", pw:"yulita" },
-  { id:24, nama:"MAULANA AL FARISI, S.Ak.", nip:"199606142020121000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"maulanaalfarisi14@gmail.com", pw:"maulana" },
+  { id:24, nama:"MAULANA AL FARISI, S.Ak.", nip:"199606142020121000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"alfarisi14061996@gmail.com", pw:"maulana" },
   { id:25, nama:"SIFA AMALIA, S.H.", nip:"199703162024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"sifa" },
   { id:26, nama:"AINAYYA ASA MAHENDRA INDARTO, S.H.", nip:"199911062024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"ainayya" },
   { id:27, nama:"DIENA AL FITRIANA, S.H.", nip:"200012252025062000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"diena" },
