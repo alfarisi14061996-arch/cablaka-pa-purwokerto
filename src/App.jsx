@@ -340,6 +340,7 @@ const MENU_ICON_PATHS = {
   refresh:  <><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></>,
   clipboardList: <><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></>,
   edit:     <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></>,
+  printer:  <><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></>,
 };
 function MenuIcon({ name, size=18 }) {
   const path = MENU_ICON_PATHS[name];
@@ -544,6 +545,13 @@ function App() {
   const [selectedIzin, setSelectedIzin] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar toggle
 
+  // filter untuk fitur "Cetak Laporan" (khusus admin)
+  const [laporanFilter, setLaporanFilter] = useState(() => {
+    const d = new Date();
+    const awalBulan = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;
+    return { dari: awalBulan, sampai: today(), status: "semua", atasanId: "semua" };
+  });
+
   // login state
   const [selUser, setSelUser] = useState("");
   const [pw, setPw] = useState("");
@@ -621,6 +629,7 @@ function App() {
     if (user.role === "admin") return [
       { key:"dashboard", icon:"dashboard", label:"Dashboard" },
       { key:"semua",     icon:"semua", label:"Semua Pengajuan" },
+      { key:"laporan",   icon:"printer", label:"Cetak Laporan" },
       { key:"pegawai",   icon:"pegawai", label:"Data Pegawai" },
     ];
     const tabs = [];
@@ -778,6 +787,97 @@ function App() {
             <span style="font-size:9px;letter-spacing:.3px;color:#444;">Scan untuk validasi digital</span>
           </div>
           <p style="margin:0;font-weight:700;">${at?.nama||"—"}</p>
+        </div>
+      </div>
+    </div>`;
+    setTimeout(() => window.print(), 300);
+  };
+
+  // CETAK LAPORAN REKAP (khusus admin) — mencetak tabel rekap pengajuan izin
+  // sesuai filter rentang tanggal, status, dan atasan yang dipilih.
+  const cetakLaporan = (dataLaporan) => {
+    if (!dataLaporan.length) { addToast("Tidak ada data untuk dicetak pada rentang ini.", true); return; }
+    const tglSlash = (s) => { if (!s) return "-"; const [y,m,d] = s.split("-"); return `${d}/${m}/${y}`; };
+    const now = new Date();
+    const tglCetak = `${String(now.getDate()).padStart(2,"0")}/${String(now.getMonth()+1).padStart(2,"0")}/${now.getFullYear()} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+
+    const total = dataLaporan.length;
+    const disetujui = dataLaporan.filter(x=>x.status==="disetujui").length;
+    const ditolak = dataLaporan.filter(x=>x.status==="ditolak").length;
+    const menunggu = dataLaporan.filter(x=>x.status==="menunggu").length;
+
+    const statusLabel = { disetujui:"Disetujui", ditolak:"Ditolak", menunggu:"Menunggu" };
+    const rows = dataLaporan.map((x,i) => {
+      const at = USERS.find(u=>u.id===x.atasanId);
+      return `<tr>
+        <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${i+1}</td>
+        <td style="border:1px solid #999;padding:5px 7px;">${x.pegawaiNama}</td>
+        <td style="border:1px solid #999;padding:5px 7px;">${tglSlash(x.tanggal)}</td>
+        <td style="border:1px solid #999;padding:5px 7px;">${x.keperluan}</td>
+        <td style="border:1px solid #999;padding:5px 7px;">${x.tujuan}</td>
+        <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${x.jamKeluar}</td>
+        <td style="border:1px solid #999;padding:5px 7px;">${at?.nama||"-"}</td>
+        <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${statusLabel[x.status]||x.status}</td>
+      </tr>`;
+    }).join("");
+
+    let printEl = document.getElementById("print-area");
+    if (!printEl) {
+      printEl = document.createElement("div");
+      printEl.id = "print-area";
+      printEl.style.display = "none";
+      document.body.appendChild(printEl);
+    }
+    printEl.innerHTML = `<div style="padding:30px 40px;font-family:'Times New Roman',Times,serif;font-size:12px;line-height:1.5;color:#000;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <img src="${LOGO_PA_SRC}" style="width:90px;height:auto;flex-shrink:0;margin-top:2px;" alt="logo"/>
+        <div style="flex:1;text-align:center;">
+          <p style="margin:0;font-weight:700;font-size:12px;">MAHKAMAH AGUNG REPUBLIK INDONESIA</p>
+          <p style="margin:0;font-weight:700;font-size:12px;">DIREKTORAT JENDERAL BADAN PERADILAN AGAMA</p>
+          <p style="margin:0;font-weight:700;font-size:12px;">PENGADILAN TINGGI AGAMA SEMARANG</p>
+          <p style="margin:0;font-weight:700;font-size:15px;">PENGADILAN AGAMA PURWOKERTO</p>
+          <p style="margin:5px 0 0;font-weight:700;font-size:10px;">JL. Gerilya NO. 7A Purwokerto &ndash; 53143 TELP. 0281-636366 FAX. 0281-643289</p>
+          <p style="margin:1px 0 0;font-weight:700;font-size:10px;">website : http://www.pa-purwokerto.go.id email : pa.purwokerto@gmail.com</p>
+        </div>
+      </div>
+      <div style="border-bottom:3px double #000;margin:8px 0 18px;"></div>
+
+      <div style="text-align:center;margin-bottom:4px;"><span style="font-weight:700;text-decoration:underline;font-size:14px;text-transform:uppercase;">Laporan Rekap Pengajuan Izin Keluar Kantor</span></div>
+      <div style="text-align:center;margin-bottom:16px;font-size:11.5px;">Periode ${tglSlash(laporanFilter.dari)} s.d. ${tglSlash(laporanFilter.sampai)}</div>
+
+      <table style="margin:0 0 16px;border-collapse:collapse;width:100%;font-size:11.5px;">
+        <tr>
+          <td style="padding:3px 0;width:140px;">Total Pengajuan</td><td style="width:14px;">:</td><td style="font-weight:700;">${total}</td>
+          <td style="padding:3px 0;width:140px;padding-left:24px;">Disetujui</td><td style="width:14px;">:</td><td style="font-weight:700;color:#1a6b3c;">${disetujui}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 0;">Ditolak</td><td>:</td><td style="font-weight:700;color:#b03030;">${ditolak}</td>
+          <td style="padding:3px 0;padding-left:24px;">Menunggu</td><td>:</td><td style="font-weight:700;color:#a07a10;">${menunggu}</td>
+        </tr>
+      </table>
+
+      <table style="border-collapse:collapse;width:100%;font-size:11px;">
+        <thead>
+          <tr style="background:#e9e9e9;">
+            <th style="border:1px solid #999;padding:6px 7px;width:28px;">No</th>
+            <th style="border:1px solid #999;padding:6px 7px;text-align:left;">Nama Pegawai</th>
+            <th style="border:1px solid #999;padding:6px 7px;text-align:left;width:75px;">Tanggal</th>
+            <th style="border:1px solid #999;padding:6px 7px;text-align:left;">Keperluan</th>
+            <th style="border:1px solid #999;padding:6px 7px;text-align:left;">Tujuan</th>
+            <th style="border:1px solid #999;padding:6px 7px;width:50px;">Jam</th>
+            <th style="border:1px solid #999;padding:6px 7px;text-align:left;">Atasan</th>
+            <th style="border:1px solid #999;padding:6px 7px;width:70px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <div style="display:flex;justify-content:space-between;margin-top:30px;">
+        <div style="font-size:10.5px;color:#444;">Dicetak otomatis melalui CABLAKA pada ${tglCetak} WIB</div>
+        <div style="text-align:center;min-width:200px;">
+          <p style="margin:0;">Purwokerto, ${tglSlash(today())}</p>
+          <p style="margin:0 0 55px;">Admin CABLAKA,</p>
+          <p style="margin:0;font-weight:700;text-decoration:underline;">${user?.nama||"-"}</p>
         </div>
       </div>
     </div>`;
@@ -961,6 +1061,70 @@ function App() {
           </table></div>}
         </Card>
       </>;
+    }
+
+    if (tab === "laporan") {
+      const dataLaporan = db.izin.filter(x => {
+        if (x.tanggal < laporanFilter.dari || x.tanggal > laporanFilter.sampai) return false;
+        if (laporanFilter.status !== "semua" && x.status !== laporanFilter.status) return false;
+        if (laporanFilter.atasanId !== "semua" && String(x.atasanId) !== String(laporanFilter.atasanId)) return false;
+        return true;
+      }).sort((a,b) => a.tanggal.localeCompare(b.tanggal));
+      const daftarAtasan = USERS.filter(u => u.role==="atasan" || u.role==="keduanya");
+
+      return (<>
+        <Card title={<IconLabel icon="printer">Cetak Laporan Rekap Pengajuan Izin</IconLabel>}>
+          <div style={S.formRow}>
+            <div style={S.formGroup}>
+              <label style={S.formLabel}>Dari Tanggal</label>
+              <input style={S.formControl} className="form-field" type="date" value={laporanFilter.dari} onChange={e=>setLaporanFilter(f=>({...f,dari:e.target.value}))} />
+            </div>
+            <div style={S.formGroup}>
+              <label style={S.formLabel}>Sampai Tanggal</label>
+              <input style={S.formControl} className="form-field" type="date" value={laporanFilter.sampai} onChange={e=>setLaporanFilter(f=>({...f,sampai:e.target.value}))} />
+            </div>
+          </div>
+          <div style={S.formRow}>
+            <div style={S.formGroup}>
+              <label style={S.formLabel}>Status</label>
+              <select style={S.formControl} className="form-field" value={laporanFilter.status} onChange={e=>setLaporanFilter(f=>({...f,status:e.target.value}))}>
+                <option value="semua">Semua Status</option>
+                <option value="disetujui">Disetujui</option>
+                <option value="ditolak">Ditolak</option>
+                <option value="menunggu">Menunggu</option>
+              </select>
+            </div>
+            <div style={S.formGroup}>
+              <label style={S.formLabel}>Atasan</label>
+              <select style={S.formControl} className="form-field" value={laporanFilter.atasanId} onChange={e=>setLaporanFilter(f=>({...f,atasanId:e.target.value}))}>
+                <option value="semua">Semua Atasan</option>
+                {daftarAtasan.map(a=><option key={a.id} value={a.id}>{a.nama}</option>)}
+              </select>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:6}}>
+            <Btn variant="primary" onClick={()=>cetakLaporan(dataLaporan)}><IconLabel icon="printer" size={13}>Cetak Laporan ({dataLaporan.length} data)</IconLabel></Btn>
+          </div>
+        </Card>
+
+        <Card title={<IconLabel icon="clipboardList">{`Pratinjau Data (${dataLaporan.length})`}</IconLabel>} noPad>
+          {!dataLaporan.length ? <EmptyState icon={<MenuIcon name="fileText" size={36}/>} msg="Tidak ada data pada rentang & filter ini"/> :
+          <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+            <thead><tr><Th>#</Th><Th>Nama</Th><Th>Tanggal</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th><Th>Atasan</Th><Th>Status</Th></tr></thead>
+            <tbody>{dataLaporan.map((x,i)=>{
+              const at=USERS.find(u=>u.id===x.atasanId);
+              return <tr key={x.id}>
+                <Td mono>{String(i+1).padStart(2,"0")}</Td>
+                <Td><b>{x.pegawaiNama}</b></Td>
+                <Td>{fmtTgl(x.tanggal)}</Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td>
+                <Td mono>{x.jamKeluar}</Td>
+                <Td small>{at?.nama||"-"}</Td>
+                <Td><BadgeStatus s={x.status}/></Td>
+              </tr>;
+            })}</tbody>
+          </table></div>}
+        </Card>
+      </>);
     }
 
     if (tab === "pegawai") return (
