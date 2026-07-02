@@ -253,10 +253,10 @@ const S = {
   statLabel: { fontSize:11, color:"#718096", marginTop:4, display:"flex", alignItems:"center", gap:5 },
 
   // form
-  formRow: { display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 },
-  formGroup: { marginBottom:18 },
+  formRow: { display:"grid", gridTemplateColumns:"1fr 1fr", gap:18, minWidth:0 },
+  formGroup: { marginBottom:18, minWidth:0 },
   formLabel: { display:"block", fontSize:11.5, fontWeight:800, color:"#2f4a37", marginBottom:7, textTransform:"uppercase", letterSpacing:.5 },
-  formControl: { width:"100%", padding:"11px 13px", border:"1.5px solid #dfe6e0", borderRadius:10, fontSize:13.5, fontFamily:"inherit", background:"#f7faf8", outline:"none", transition:"border-color .15s, box-shadow .15s, background .15s" },
+  formControl: { width:"100%", padding:"11px 13px", border:"1.5px solid #dfe6e0", borderRadius:10, fontSize:13.5, fontFamily:"inherit", background:"#f7faf8", outline:"none", transition:"border-color .15s, box-shadow .15s, background .15s", boxSizing:"border-box", minWidth:0 },
 
   // buttons
   btn: (variant="primary", sm=false) => {
