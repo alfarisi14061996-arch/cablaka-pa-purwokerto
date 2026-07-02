@@ -1363,6 +1363,7 @@ function App() {
         select option{color:#1a2e1f!important;background:#ffffff!important;}
         .form-field:focus{border-color:#2f6b45!important;background:#fff!important;box-shadow:0 0 0 3px rgba(47,107,69,.12);}
         .form-field::placeholder{color:#a3b0a8;}
+        input[type="date"].form-field{-webkit-appearance:none;appearance:none;height:46px;line-height:1.2;}
         .login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -6px rgba(26,71,49,.55);}
         .login-btn:active{transform:translateY(0);}
         .user-pill:hover{background:rgba(255,255,255,.18)!important;}
