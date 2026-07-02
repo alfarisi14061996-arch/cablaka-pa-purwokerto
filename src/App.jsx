@@ -896,7 +896,7 @@ function App() {
       <div style={{ maxWidth:680 }}>
         <div style={S.alertInfo}>👋 Halo, <b>{user.nama}</b>. Isi form di bawah untuk mengajukan izin keluar kantor.</div>
         <Card title={<IconLabel icon="edit">Form Pengajuan Izin Keluar</IconLabel>}>
-          <div style={S.formRow}>
+          <div style={S.formRow} className="form-row">
             <div style={S.formGroup}>
               <label style={S.formLabel}>Tanggal Izin *</label>
               <input style={S.formControl} className="form-field" type="date" value={form.tanggal} onChange={e=>setForm(f=>({...f,tanggal:e.target.value}))} />
@@ -908,7 +908,7 @@ function App() {
               </select>
             </div>
           </div>
-          <div style={S.formRow}>
+          <div style={S.formRow} className="form-row">
             <div style={S.formGroup}>
               <label style={S.formLabel}>Jam Keluar *</label>
               <div style={{display:"flex",gap:4}}>
@@ -1074,7 +1074,7 @@ function App() {
 
       return (<>
         <Card title={<IconLabel icon="printer">Cetak Laporan Rekap Pengajuan Izin</IconLabel>}>
-          <div style={S.formRow}>
+          <div style={S.formRow} className="form-row">
             <div style={S.formGroup}>
               <label style={S.formLabel}>Dari Tanggal</label>
               <input style={S.formControl} className="form-field" type="date" value={laporanFilter.dari} onChange={e=>setLaporanFilter(f=>({...f,dari:e.target.value}))} />
@@ -1084,7 +1084,7 @@ function App() {
               <input style={S.formControl} className="form-field" type="date" value={laporanFilter.sampai} onChange={e=>setLaporanFilter(f=>({...f,sampai:e.target.value}))} />
             </div>
           </div>
-          <div style={S.formRow}>
+          <div style={S.formRow} className="form-row">
             <div style={S.formGroup}>
               <label style={S.formLabel}>Status</label>
               <select style={S.formControl} className="form-field" value={laporanFilter.status} onChange={e=>setLaporanFilter(f=>({...f,status:e.target.value}))}>
@@ -1387,6 +1387,7 @@ function App() {
           .user-info-text{display:none;}
           .user-pill{padding:6px!important;gap:0!important;}
           header{padding:0 12px!important;gap:10px!important;}
+          .form-row{grid-template-columns:1fr!important;}
 
           .app-sidebar{
             position:fixed;
