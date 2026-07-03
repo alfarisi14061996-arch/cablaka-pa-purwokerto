@@ -330,6 +330,7 @@ const MENU_ICON_PATHS = {
   xCircle:  <><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></>,
   alertTriangle: <><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
   clock:    <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
+  lock:     <><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
   calendar: <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
   mapPin:   <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></>,
   chevronDown: <><polyline points="6 9 12 15 18 9"/></>,
@@ -631,6 +632,66 @@ function App() {
     const ok = await askConfirm({ title: "Keluar dari CABLAKA?", message: "Anda perlu masuk kembali untuk mengakses aplikasi ini." });
     if (!ok) return;
     setUser(null); setPw(""); setSelUser(""); setLoginErr(false); setDb({ izin: [] });
+  };
+
+  // ── GANTI PASSWORD ──
+  const [modalGantiPw, setModalGantiPw] = useState(false);
+  const [gantiPwForm, setGantiPwForm] = useState({ lamanya:"", baru:"", konfirmasi:"", showLama:false, showBaru:false, showKonfirmasi:false });
+  const [gantiPwErr, setGantiPwErr] = useState("");
+  const [gantiPwLoading, setGantiPwLoading] = useState(false);
+  // untuk admin: reset password pegawai lain
+  const [modalResetPw, setModalResetPw] = useState(null); // null | user object
+  const [resetPwForm, setResetPwForm] = useState({ baru:"", konfirmasi:"", show:false });
+  const [resetPwErr, setResetPwErr] = useState("");
+  const [resetPwLoading, setResetPwLoading] = useState(false);
+
+  const panggilGantiPassword = async (userId, passwordLama, passwordBaru) => {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    const res = await fetch(`${supabaseUrl}/functions/v1/ganti-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseAnonKey}`, apikey: supabaseAnonKey },
+      body: JSON.stringify({ userId, passwordLama, passwordBaru }),
+    });
+    return await res.json();
+  };
+
+  const submitGantiPassword = async () => {
+    setGantiPwErr("");
+    if (!gantiPwForm.lamanya) { setGantiPwErr("Password lama wajib diisi."); return; }
+    if (!gantiPwForm.baru || gantiPwForm.baru.length < 4) { setGantiPwErr("Password baru minimal 4 karakter."); return; }
+    if (gantiPwForm.baru !== gantiPwForm.konfirmasi) { setGantiPwErr("Konfirmasi password tidak cocok."); return; }
+    setGantiPwLoading(true);
+    try {
+      const result = await panggilGantiPassword(user.id, gantiPwForm.lamanya, gantiPwForm.baru);
+      if (!result.ok) { setGantiPwErr(result.error || "Password lama salah."); return; }
+      setModalGantiPw(false);
+      setGantiPwForm({ lamanya:"", baru:"", konfirmasi:"", showLama:false, showBaru:false, showKonfirmasi:false });
+      addToast("Password berhasil diubah!");
+    } catch { setGantiPwErr("Gagal menghubungi server, coba lagi."); }
+    finally { setGantiPwLoading(false); }
+  };
+
+  const submitResetPassword = async () => {
+    setResetPwErr("");
+    if (!resetPwForm.baru || resetPwForm.baru.length < 4) { setResetPwErr("Password baru minimal 4 karakter."); return; }
+    if (resetPwForm.baru !== resetPwForm.konfirmasi) { setResetPwErr("Konfirmasi password tidak cocok."); return; }
+    setResetPwLoading(true);
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch(`${supabaseUrl}/functions/v1/ganti-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseAnonKey}`, apikey: supabaseAnonKey },
+        body: JSON.stringify({ userId: modalResetPw.id, passwordBaru: resetPwForm.baru, adminId: user.id }),
+      });
+      const result = await res.json();
+      if (!result.ok) { setResetPwErr(result.error || "Gagal mereset password."); return; }
+      setModalResetPw(null);
+      setResetPwForm({ baru:"", konfirmasi:"", show:false });
+      addToast(`Password ${modalResetPw.nama} berhasil direset!`);
+    } catch { setResetPwErr("Gagal menghubungi server, coba lagi."); }
+    finally { setResetPwLoading(false); }
   };
 
   // TABS
@@ -1159,7 +1220,7 @@ function App() {
     if (tab === "pegawai") return (
       <Card title="👥 Data Pegawai" noPad>
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-          <thead><tr><Th>#</Th><Th>Nama</Th><Th>NIP</Th><Th>Jabatan</Th><Th>Role</Th><Th>Total Izin</Th><Th>Disetujui</Th></tr></thead>
+          <thead><tr><Th>#</Th><Th>Nama</Th><Th>NIP</Th><Th>Jabatan</Th><Th>Role</Th><Th>Total Izin</Th><Th>Disetujui</Th><Th>Aksi</Th></tr></thead>
           <tbody>{USERS.map((u,i)=>{
             const my=db.izin.filter(x=>x.pegawaiId===u.id);
             return <tr key={u.id}>
@@ -1170,6 +1231,7 @@ function App() {
               <Td><span style={{...S.badge(u.role==="atasan"||u.role==="keduanya"?"disetujui":"menunggu")}}>{u.role==="admin"?"Admin":u.role==="keduanya"?"Pegawai + Atasan":u.role==="atasan"?"Atasan":"Pegawai"}</span></Td>
               <Td>{my.length}</Td>
               <Td>{my.filter(x=>x.status==="disetujui").length}</Td>
+              <Td><button onClick={()=>{setModalResetPw(u);setResetPwForm({baru:"",konfirmasi:"",show:false});setResetPwErr("");}} style={{background:"none",border:"1px solid #dfe6e0",borderRadius:7,padding:"4px 10px",fontSize:11.5,color:"#2f6b45",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}><IconLabel icon="lock" size={11}>Reset</IconLabel></button></Td>
             </tr>;
           })}</tbody>
         </table></div>
@@ -1293,6 +1355,7 @@ function App() {
           <div style={{flex:1}}/>
           <div style={S.sidebarDivider}/>
           <button className="sb-btn sb-btn-danger" style={{...S.sidebarBtn(false),color:"#feb2b2"}} onClick={logout}><span style={{width:24,display:"flex",alignItems:"center",justifyContent:"center"}}><MenuIcon name="keluar" size={17}/></span>Keluar</button>
+          <button className="sb-btn" style={{...S.sidebarBtn(false),color:"#a3d9b8",marginBottom:4}} onClick={()=>{setModalGantiPw(true);setGantiPwErr("");setGantiPwForm({lamanya:"",baru:"",konfirmasi:"",showLama:false,showBaru:false,showKonfirmasi:false});}}><span style={{width:24,display:"flex",alignItems:"center",justifyContent:"center"}}><MenuIcon name="lock" size={17}/></span>Ganti Password</button>
         </nav>
 
         {/* CONTENT */}
@@ -1340,6 +1403,71 @@ function App() {
               <textarea style={{...S.formControl,resize:"vertical",minHeight:90}} className="form-field" placeholder="Jelaskan alasan penolakan…" value={alasanTolak} onChange={e=>setAlasanTolak(e.target.value)}/>
             </div>
             <Btn variant="danger" full onClick={konfirmasiTolak}>Konfirmasi Penolakan</Btn>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL GANTI PASSWORD (untuk diri sendiri) */}
+      {modalGantiPw && (
+        <div style={S.overlay} onClick={()=>setModalGantiPw(false)}>
+          <div style={{...S.modal,maxWidth:420}} onClick={e=>e.stopPropagation()}>
+            <button style={S.modalClose} onClick={()=>setModalGantiPw(false)}>✕</button>
+            <div style={S.modalTitle}><IconLabel icon="lock" size={16}>Ganti Password</IconLabel></div>
+            {[
+              {label:"Password Lama *", key:"lamanya", showKey:"showLama"},
+              {label:"Password Baru *", key:"baru", showKey:"showBaru"},
+              {label:"Konfirmasi Password Baru *", key:"konfirmasi", showKey:"showKonfirmasi"},
+            ].map(f=>(
+              <div key={f.key} style={{...S.formGroup,position:"relative"}}>
+                <label style={S.formLabel}>{f.label}</label>
+                <input style={{...S.formControl,paddingRight:42}} className="form-field"
+                  type={gantiPwForm[f.showKey]?"text":"password"}
+                  value={gantiPwForm[f.key]}
+                  onChange={e=>setGantiPwForm(p=>({...p,[f.key]:e.target.value}))}
+                  onKeyDown={e=>e.key==="Enter"&&submitGantiPassword()}
+                />
+                <button onClick={()=>setGantiPwForm(p=>({...p,[f.showKey]:!p[f.showKey]}))}
+                  style={{position:"absolute",right:10,top:32,background:"none",border:"none",cursor:"pointer",color:"#7a9484",padding:4}}>
+                  {gantiPwForm[f.showKey]?"🙈":"👁️"}
+                </button>
+              </div>
+            ))}
+            {gantiPwErr && <div style={{color:"#c0392b",fontSize:12.5,marginBottom:12,padding:"8px 12px",background:"#fbeaea",borderRadius:8}}>{gantiPwErr}</div>}
+            <Btn variant="primary" full onClick={submitGantiPassword} disabled={gantiPwLoading}>
+              {gantiPwLoading?"Menyimpan…":"Simpan Password Baru"}
+            </Btn>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL RESET PASSWORD (admin reset password pegawai lain) */}
+      {modalResetPw && (
+        <div style={S.overlay} onClick={()=>setModalResetPw(null)}>
+          <div style={{...S.modal,maxWidth:420}} onClick={e=>e.stopPropagation()}>
+            <button style={S.modalClose} onClick={()=>setModalResetPw(null)}>✕</button>
+            <div style={S.modalTitle}><IconLabel icon="lock" size={16}>Reset Password</IconLabel></div>
+            <p style={{fontSize:13,color:"#5b6b60",marginBottom:16}}>Reset password untuk: <b>{modalResetPw.nama}</b></p>
+            {[
+              {label:"Password Baru *", key:"baru"},
+              {label:"Konfirmasi Password Baru *", key:"konfirmasi"},
+            ].map(f=>(
+              <div key={f.key} style={{...S.formGroup,position:"relative"}}>
+                <label style={S.formLabel}>{f.label}</label>
+                <input style={{...S.formControl,paddingRight:42}} className="form-field"
+                  type={resetPwForm.show?"text":"password"}
+                  value={resetPwForm[f.key]}
+                  onChange={e=>setResetPwForm(p=>({...p,[f.key]:e.target.value}))}
+                />
+                <button onClick={()=>setResetPwForm(p=>({...p,show:!p.show}))}
+                  style={{position:"absolute",right:10,top:32,background:"none",border:"none",cursor:"pointer",color:"#7a9484",padding:4}}>
+                  {resetPwForm.show?"🙈":"👁️"}
+                </button>
+              </div>
+            ))}
+            {resetPwErr && <div style={{color:"#c0392b",fontSize:12.5,marginBottom:12,padding:"8px 12px",background:"#fbeaea",borderRadius:8}}>{resetPwErr}</div>}
+            <Btn variant="primary" full onClick={submitResetPassword} disabled={resetPwLoading}>
+              {resetPwLoading?"Menyimpan…":"Reset Password"}
+            </Btn>
           </div>
         </div>
       )}
