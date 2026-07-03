@@ -22,48 +22,48 @@ const LOGO_PA_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAADUCAYAA
 // Selama field "email" masih kosong ("") untuk seseorang, notifikasi untuknya
 // otomatis dilewati (dicek di kirimNotifikasiEmail()).
 const USERS = [
-  { id:1, nama:"AHMAD PADLI, S.Ag., M.H.", nip:"197902092000121000", jabatan:"Ketua", role:"keduanya", avatar:"👨‍💼", email:"", pw:"padli" },
-  { id:2, nama:"Drs. NURKHOJIN", nip:"196107211993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"nurkhojin" },
-  { id:3, nama:"Drs. FAHRUDIN, MH.", nip:"196506011993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"fahrudin" },
-  { id:4, nama:"Drs. ENDANG SOFWAN, MH", nip:"196606211993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"endang" },
-  { id:5, nama:"Drs. AHMAD FAIZ, SH.,MSI.", nip:"196806121993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"faiz" },
-  { id:6, nama:"IKHSANUDDIN, S.H.", nip:"196410271991031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"ikhsan" },
-  { id:7, nama:"HELMI ASHARI, SH", nip:"196806051992031000", jabatan:"Panitera", role:"keduanya", avatar:"👨‍💼", email:"", pw:"helmi" },
-  { id:8, nama:"SLAMET SUTADI, SAg.", nip:"196912242002121000", jabatan:"Sekretaris", role:"keduanya", avatar:"👨‍💼", email:"", pw:"slamet" },
-  { id:9, nama:"Drs. H. IMAM KHUSAINI", nip:"196207051994031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"imam" },
-  { id:10, nama:"Dra. NAILY ZUBAIDAH", nip:"196304251991032000", jabatan:"Hakim", role:"pegawai", avatar:"👩‍💼", email:"", pw:"naily" },
-  { id:11, nama:"Drs. H. MUSTOFA KAMIL, M.H.", nip:"196409141993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"", pw:"mustofa" },
-  { id:12, nama:"SRI LESTARI WASIS, SHI", nip:"197510101995032000", jabatan:"Panitera Muda Permohonan", role:"keduanya", avatar:"👩‍💼", email:"", pw:"sri" },
-  { id:13, nama:"ARIF RACHMANTO, ST., S.H.", nip:"197704302006041000", jabatan:"Panitera Muda Hukum", role:"keduanya", avatar:"👨‍💼", email:"", pw:"arif" },
-  { id:14, nama:"SUSANTO, SH", nip:"198503042006041000", jabatan:"Panitera Muda Gugatan", role:"keduanya", avatar:"👨‍💼", email:"", pw:"susanto" },
-  { id:15, nama:"ROBIN KADIR, S.Ag", nip:"197306212001121000", jabatan:"Kepala Sub Bagian PTIP", role:"keduanya", avatar:"👨‍💼", email:"", pw:"robin" },
-  { id:16, nama:"A.ROISUL ALAM AMRULLOH P, SHI", nip:"198002232009121000", jabatan:"Kepala Sub Bagian Umum dan Keuangan", role:"keduanya", avatar:"👨‍💼", email:"", pw:"roisul" },
-  { id:17, nama:"ARDI KRISTANTO, S.H., M.H.", nip:"198608022014081000", jabatan:"Panitera Pengganti", role:"pegawai", avatar:"👨‍💼", email:"", pw:"ardi" },
-  { id:18, nama:"NUR ALIYAH", nip:"198107022006042000", jabatan:"Panitera Pengganti", role:"pegawai", avatar:"👩‍💼", email:"", pw:"nuraliyah" },
-  { id:19, nama:"AGUNG FEBRI SETIYAWANTORO", nip:"197402071994031000", jabatan:"Juru Sita", role:"pegawai", avatar:"👨‍💼", email:"", pw:"agung" },
-  { id:20, nama:"ARNOLD DEVIYANTO, A.Md", nip:"198612012015031000", jabatan:"Juru Sita", role:"pegawai", avatar:"👨‍💼", email:"", pw:"arnold" },
-  { id:21, nama:"DEBI NURANI MANDIANTIK,A.Md", nip:"199612192020122000", jabatan:"Pranata Keuangan APBN", role:"pegawai", avatar:"👩‍💼", email:"", pw:"debi" },
-  { id:22, nama:"KANE SOEDJARNOTO,A.Md", nip:"198802222020121000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👨‍💼", email:"", pw:"kane" },
-  { id:23, nama:"YULITA INTAN PERMATASARI, A.Md.", nip:"199007112020122000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👩‍💼", email:"", pw:"yulita" },
-  { id:24, nama:"MAULANA AL FARISI, S.Ak.", nip:"199606142020121000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"alfarisi14061996@gmail.com", pw:"maulana" },
-  { id:25, nama:"SIFA AMALIA, S.H.", nip:"199703162024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"sifa" },
-  { id:26, nama:"AINAYYA ASA MAHENDRA INDARTO, S.H.", nip:"199911062024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"ainayya" },
-  { id:27, nama:"DIENA AL FITRIANA, S.H.", nip:"200012252025062000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"diena" },
-  { id:28, nama:"INEZ ANNISA FIRDA, S.H.", nip:"200106192024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"", pw:"annisa" },
-  { id:29, nama:"NUR AZIS, S.A.B.", nip:"198005162025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"", pw:"nurazis" },
-  { id:30, nama:"MUHAMMAD IRVAN SANTOSA, S.H.", nip:"198103252025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"", pw:"irvan" },
-  { id:31, nama:"SITI ASIAH, S.H.I.", nip:"198404212025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"", pw:"sitiasiah" },
-  { id:32, nama:"LUSI ARIFIANI, S.H.I.", nip:"198412022025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"", pw:"lusi" },
-  { id:33, nama:"DWI RATNA PUSPITASARI, S.H.", nip:"198804232025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"", pw:"dwi" },
-  { id:34, nama:"MUHAMMAD HIFNY AKHSIN, S.Kel.", nip:"198907112025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"", pw:"hifny" },
-  { id:35, nama:"AVIAN DONI, S.Kom.", nip:"199005082025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"", pw:"avian" },
-  { id:36, nama:"SRI ERNA NURARIYANTI, A.Md.", nip:"199106042022032000", jabatan:"Pengelola Penanganan Perkara", role:"pegawai", avatar:"👩‍💼", email:"", pw:"srirna" },
-  { id:37, nama:"SITI AMALLIYAH, A.Md.", nip:"199604052022032000", jabatan:"Pengelola Penanganan Perkara", role:"pegawai", avatar:"👩‍💼", email:"", pw:"sitiamal" },
-  { id:38, nama:"YUDIONO", nip:"197209162025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"", pw:"yudiono" },
-  { id:39, nama:"AMIN NASRULLOH", nip:"197808052025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"", pw:"amin" },
-  { id:40, nama:"SUSWO", nip:"198802142025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"", pw:"suswo" },
-  { id:41, nama:"TOYO", nip:"198810252025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"", pw:"toyo" },
-{ id:42, nama:"Admin Sistem",                      role:"admin",    avatar:"🛠️",  email:"", pw:"admin123" }
+  { id:1, nama:"AHMAD PADLI, S.Ag., M.H.", nip:"197902092000121000", jabatan:"Ketua", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:2, nama:"Drs. NURKHOJIN", nip:"196107211993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:3, nama:"Drs. FAHRUDIN, MH.", nip:"196506011993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:4, nama:"Drs. ENDANG SOFWAN, MH", nip:"196606211993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:5, nama:"Drs. AHMAD FAIZ, SH.,MSI.", nip:"196806121993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:6, nama:"IKHSANUDDIN, S.H.", nip:"196410271991031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:7, nama:"HELMI ASHARI, SH", nip:"196806051992031000", jabatan:"Panitera", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:8, nama:"SLAMET SUTADI, SAg.", nip:"196912242002121000", jabatan:"Sekretaris", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:9, nama:"Drs. H. IMAM KHUSAINI", nip:"196207051994031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:10, nama:"Dra. NAILY ZUBAIDAH", nip:"196304251991032000", jabatan:"Hakim", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:11, nama:"Drs. H. MUSTOFA KAMIL, M.H.", nip:"196409141993031000", jabatan:"Hakim", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:12, nama:"SRI LESTARI WASIS, SHI", nip:"197510101995032000", jabatan:"Panitera Muda Permohonan", role:"keduanya", avatar:"👩‍💼", email:"" },
+  { id:13, nama:"ARIF RACHMANTO, ST., S.H.", nip:"197704302006041000", jabatan:"Panitera Muda Hukum", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:14, nama:"SUSANTO, SH", nip:"198503042006041000", jabatan:"Panitera Muda Gugatan", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:15, nama:"ROBIN KADIR, S.Ag", nip:"197306212001121000", jabatan:"Kepala Sub Bagian PTIP", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:16, nama:"A.ROISUL ALAM AMRULLOH P, SHI", nip:"198002232009121000", jabatan:"Kepala Sub Bagian Umum dan Keuangan", role:"keduanya", avatar:"👨‍💼", email:"" },
+  { id:17, nama:"ARDI KRISTANTO, S.H., M.H.", nip:"198608022014081000", jabatan:"Panitera Pengganti", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:18, nama:"NUR ALIYAH", nip:"198107022006042000", jabatan:"Panitera Pengganti", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:19, nama:"AGUNG FEBRI SETIYAWANTORO", nip:"197402071994031000", jabatan:"Juru Sita", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:20, nama:"ARNOLD DEVIYANTO, A.Md", nip:"198612012015031000", jabatan:"Juru Sita", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:21, nama:"DEBI NURANI MANDIANTIK,A.Md", nip:"199612192020122000", jabatan:"Pranata Keuangan APBN", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:22, nama:"KANE SOEDJARNOTO,A.Md", nip:"198802222020121000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:23, nama:"YULITA INTAN PERMATASARI, A.Md.", nip:"199007112020122000", jabatan:"Juru Sita Pengganti", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:24, nama:"MAULANA AL FARISI, S.Ak.", nip:"199606142020121000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"alfarisi14061996@gmail.com" },
+  { id:25, nama:"SIFA AMALIA, S.H.", nip:"199703162024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:26, nama:"AINAYYA ASA MAHENDRA INDARTO, S.H.", nip:"199911062024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:27, nama:"DIENA AL FITRIANA, S.H.", nip:"200012252025062000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:28, nama:"INEZ ANNISA FIRDA, S.H.", nip:"200106192024052000", jabatan:"Analis Perkara Peradilan", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:29, nama:"NUR AZIS, S.A.B.", nip:"198005162025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:30, nama:"MUHAMMAD IRVAN SANTOSA, S.H.", nip:"198103252025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:31, nama:"SITI ASIAH, S.H.I.", nip:"198404212025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:32, nama:"LUSI ARIFIANI, S.H.I.", nip:"198412022025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:33, nama:"DWI RATNA PUSPITASARI, S.H.", nip:"198804232025212000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:34, nama:"MUHAMMAD HIFNY AKHSIN, S.Kel.", nip:"198907112025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:35, nama:"AVIAN DONI, S.Kom.", nip:"199005082025211000", jabatan:"Penata Layanan Operasional", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:36, nama:"SRI ERNA NURARIYANTI, A.Md.", nip:"199106042022032000", jabatan:"Pengelola Penanganan Perkara", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:37, nama:"SITI AMALLIYAH, A.Md.", nip:"199604052022032000", jabatan:"Pengelola Penanganan Perkara", role:"pegawai", avatar:"👩‍💼", email:"" },
+  { id:38, nama:"YUDIONO", nip:"197209162025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:39, nama:"AMIN NASRULLOH", nip:"197808052025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:40, nama:"SUSWO", nip:"198802142025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"" },
+  { id:41, nama:"TOYO", nip:"198810252025211000", jabatan:"Pengadministrasi Perkantoran", role:"pegawai", avatar:"👨‍💼", email:"" },
+{ id:42, nama:"Admin Sistem",                      role:"admin",    avatar:"🛠️", email:"" }
 ];
 
 const KEPERLUAN = ["Urusan Keluarga","Urusan Kesehatan / Berobat","Keperluan Bank / ATM","Keperluan Dinas Luar","Keperluan Pribadi Mendesak","Lain-lain"];
@@ -153,7 +153,7 @@ function emailTemplatePengajuanBaru(izin, atasanNama) {
           <tr><td style="padding:6px 0;color:#718096;width:130px;">Nama Pegawai</td><td style="padding:6px 0;font-weight:700;">${izin.pegawaiNama}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Jabatan</td><td style="padding:6px 0;">${izin.pegawaiJabatan}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Tanggal</td><td style="padding:6px 0;">${fmtTgl(izin.tanggal)}</td></tr>
-          <tr><td style="padding:6px 0;color:#718096;width:130px;">Jam Keluar</td><td style="padding:6px 0;">${izin.jamKeluar}</td></tr>
+          <tr><td style="padding:6px 0;color:#718096;width:130px;">Jam</td><td style="padding:6px 0;">${izin.jamKeluar} – ${izin.jamKembali}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Keperluan</td><td style="padding:6px 0;">${izin.keperluan}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Tujuan</td><td style="padding:6px 0;">${izin.tujuan}</td></tr>
         </table>
@@ -176,7 +176,7 @@ function emailTemplateIzinDisetujui(izin) {
         </p>
         <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;">
           <tr><td style="padding:6px 0;color:#718096;width:130px;">Tanggal</td><td style="padding:6px 0;font-weight:700;">${fmtTgl(izin.tanggal)}</td></tr>
-          <tr><td style="padding:6px 0;color:#718096;">Jam Keluar</td><td style="padding:6px 0;">${izin.jamKeluar}</td></tr>
+          <tr><td style="padding:6px 0;color:#718096;">Jam</td><td style="padding:6px 0;">${izin.jamKeluar} – ${izin.jamKembali}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Keperluan</td><td style="padding:6px 0;">${izin.keperluan}</td></tr>
           <tr><td style="padding:6px 0;color:#718096;">Tujuan</td><td style="padding:6px 0;">${izin.tujuan}</td></tr>
         </table>
@@ -559,7 +559,7 @@ function App() {
   const [loginErr, setLoginErr] = useState(false);
 
   // form state
-  const [form, setForm] = useState({ tanggal:today(), keperluan:KEPERLUAN[0], jamKeluar:"", tujuan:"", keterangan:"", atasanId:USERS.find(u=>u.role==="atasan"||u.role==="keduanya")?.id||1 });
+  const [form, setForm] = useState({ tanggal:today(), keperluan:KEPERLUAN[0], jamKeluar:"", jamKembali:"", tujuan:"", keterangan:"", atasanId:USERS.find(u=>u.role==="atasan"||u.role==="keduanya")?.id||1 });
 
   // tolak state
   const [alasanTolak, setAlasanTolak] = useState("");
@@ -597,7 +597,21 @@ function App() {
     const uid = parseInt(selUser);
     if (!uid) { addToast("Pilih nama pengguna!", true); return; }
     const u = USERS.find(x => x.id === uid);
-    if (!u || pw !== u.pw) { setLoginErr(true); return; }
+    if (!u) { setLoginErr(true); return; }
+    if (!pw.trim()) { addToast("Masukkan password!", true); return; }
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch(`${supabaseUrl}/functions/v1/verifikasi-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseAnonKey}`, apikey: supabaseAnonKey },
+        body: JSON.stringify({ userId: uid, password: pw }),
+      });
+      const result = await res.json();
+      if (!result.ok) { setLoginErr(true); return; }
+    } catch (e) {
+      addToast("Gagal menghubungi server, coba lagi.", true); return;
+    }
     const data = await load("Memuat data…");
     setUser(u);
     const defaultTab = u.role === "admin" ? "dashboard" : u.role === "keduanya" ? "form" : u.role === "pegawai" ? "form" : "approval";
@@ -652,7 +666,8 @@ function App() {
 
   // AJUKAN IZIN
   const ajukanIzin = async () => {
-    if (!form.tanggal || !form.jamKeluar || !form.tujuan.trim()) { addToast("Lengkapi semua field wajib!", true); return; }
+    if (!form.tanggal || !form.jamKeluar || !form.jamKembali || !form.tujuan.trim()) { addToast("Lengkapi semua field wajib!", true); return; }
+    if (form.jamKembali <= form.jamKeluar) { addToast("Jam kembali harus setelah jam keluar!", true); return; }
     const newItem = { id:Date.now(), pegawaiId:user.id, pegawaiNama:user.nama, pegawaiJabatan:user.jabatan, pegawaiNip:user.nip,
       ...form, atasanId:parseInt(form.atasanId), status:"menunggu", createdAt:Date.now(), updatedAt:null, alasanTolak:"", disetujuiOleh:"" };
     const fresh = await load("Memuat data terbaru…");
@@ -661,7 +676,7 @@ function App() {
     if (ok) {
       addToast("Pengajuan berhasil dikirim!");
       setTab("riwayat");
-      setForm(f => ({ ...f, jamKeluar:"", tujuan:"", keterangan:"", tanggal:today() }));
+      setForm(f => ({ ...f, jamKeluar:"", jamKembali:"", tujuan:"", keterangan:"", tanggal:today() }));
       // Notifikasi email ke atasan yang dituju — fire-and-forget, tidak menghambat UI
       const atasan = USERS.find(u => u.id === newItem.atasanId);
       kirimNotifikasiEmail({
@@ -773,7 +788,8 @@ function App() {
         <tr><td style="padding:1px 0;">NIP</td><td>:</td><td>${pegNip}</td></tr>
         <tr><td style="padding:1px 0;">Jabatan</td><td>:</td><td>${pegJabatan}</td></tr>
         <tr><td style="padding:1px 0;">Tanggal</td><td>:</td><td>${tglSlash(x.tanggal)}</td></tr>
-        <tr><td style="padding:1px 0;">Jam</td><td>:</td><td>${x.jamKeluar}</td></tr>
+        <tr><td style="padding:1px 0;">Jam Keluar</td><td>:</td><td>${x.jamKeluar}</td></tr>
+        <tr><td style="padding:1px 0;">Est. Kembali</td><td>:</td><td>${x.jamKembali}</td></tr>
         <tr><td style="padding:1px 0;">Keperluan</td><td>:</td><td>${x.keperluan}</td></tr>
         <tr><td style="padding:1px 0;">Keterangan</td><td>:</td><td>${x.keterangan||"-"}</td></tr>
       </table>
@@ -815,7 +831,7 @@ function App() {
         <td style="border:1px solid #999;padding:5px 7px;">${tglSlash(x.tanggal)}</td>
         <td style="border:1px solid #999;padding:5px 7px;">${x.keperluan}</td>
         <td style="border:1px solid #999;padding:5px 7px;">${x.tujuan}</td>
-        <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${x.jamKeluar}</td>
+        <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${x.jamKeluar}–${x.jamKembali}</td>
         <td style="border:1px solid #999;padding:5px 7px;">${at?.nama||"-"}</td>
         <td style="border:1px solid #999;padding:5px 7px;text-align:center;">${statusLabel[x.status]||x.status}</td>
       </tr>`;
@@ -922,6 +938,19 @@ function App() {
                 </select>
               </div>
             </div>
+            <div style={S.formGroup}>
+              <label style={S.formLabel}>Estimasi Kembali *</label>
+              <div style={{display:"flex",gap:4}}>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKembali.split(":")[0]||""} onChange={e=>{const h=e.target.value,m=form.jamKembali.split(":")[1]||"00";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
+                  <option value="">Jam</option>
+                  {Array.from({length:24},(_,i)=>String(i).padStart(2,"0")).map(h=><option key={h} value={h}>{h}</option>)}
+                </select>
+                <select style={{...S.formControl,flex:1}} className="form-field" value={form.jamKembali.split(":")[1]||""} onChange={e=>{const m=e.target.value,h=form.jamKembali.split(":")[0]||"";setForm(f=>({...f,jamKembali:h&&m?`${h}:${m}`:""}));}}>
+                  <option value="">Menit</option>
+                  {["00","05","10","15","20","25","30","35","40","45","50","55"].map(m=><option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+            </div>
           </div>
           <div style={S.formGroup}>
             <label style={S.formLabel}>Tujuan / Lokasi *</label>
@@ -957,7 +986,7 @@ function App() {
             <tbody>{dataRiwayat.map((x,i)=><tr key={x.id}>
               <Td mono>{String(i+1).padStart(2,"0")}</Td>
               <Td>{fmtTgl(x.tanggal)}</Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td>
-              <Td mono>{x.jamKeluar}</Td>
+              <Td mono>{x.jamKeluar}–{x.jamKembali}</Td>
               <Td><BadgeStatus s={x.status}/></Td>
               <Td><div style={{display:"flex",gap:5}}>
                 <Btn variant="info" sm onClick={()=>{setSelectedIzin(x.id);setModal("detail");}}>🔍</Btn>
@@ -986,7 +1015,7 @@ function App() {
               </div>
             </div>
             <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap",fontSize:12,color:"#718096"}}>
-              <span><IconLabel icon="calendar" size={12} gap={5}>{fmtTgl(x.tanggal)}</IconLabel></span><span><IconLabel icon="clock" size={12} gap={5}>{x.jamKeluar}</IconLabel></span><span><IconLabel icon="mapPin" size={12} gap={5}>{x.tujuan}</IconLabel></span>
+              <span><IconLabel icon="calendar" size={12} gap={5}>{fmtTgl(x.tanggal)}</IconLabel></span><span><IconLabel icon="clock" size={12} gap={5}>{x.jamKeluar}–{x.jamKembali}</IconLabel></span><span><IconLabel icon="mapPin" size={12} gap={5}>{x.tujuan}</IconLabel></span>
             </div>
             <div style={{fontSize:13,color:"#4a5568",marginTop:8,fontStyle:"italic",display:"flex",alignItems:"center",gap:6}}><MenuIcon name="edit" size={12}/>{x.keperluan}{x.keterangan?" — "+x.keterangan:""}</div>
             <div style={{fontSize:11,color:"#cbd5e0",marginTop:6}}>Diajukan {fmtDT(x.createdAt)}</div>
@@ -1027,7 +1056,7 @@ function App() {
               <Td mono>{String(i+1).padStart(2,"0")}</Td>
               <Td><b>{x.pegawaiNama}</b><br/><span style={{fontSize:11,color:"#718096"}}>{x.pegawaiJabatan}</span></Td>
               <Td>{fmtTgl(x.tanggal)}</Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td>
-              <Td mono>{x.jamKeluar}</Td>
+              <Td mono>{x.jamKeluar}–{x.jamKembali}</Td>
               <Td small>{at?.nama||"-"}</Td>
               <Td><BadgeStatus s={x.status}/></Td>
               <Td><div style={{display:"flex",gap:5}}>
@@ -1056,7 +1085,7 @@ function App() {
           <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
             <thead><tr><Th>Nama</Th><Th>Keperluan</Th><Th>Tujuan</Th><Th>Jam</Th></tr></thead>
             <tbody>{hariIni.map(x=><tr key={x.id}>
-              <Td><b>{x.pegawaiNama}</b></Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td><Td mono>{x.jamKeluar}</Td>
+              <Td><b>{x.pegawaiNama}</b></Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td><Td mono>{x.jamKeluar}–{x.jamKembali}</Td>
             </tr>)}</tbody>
           </table></div>}
         </Card>
@@ -1117,7 +1146,7 @@ function App() {
                 <Td mono>{String(i+1).padStart(2,"0")}</Td>
                 <Td><b>{x.pegawaiNama}</b></Td>
                 <Td>{fmtTgl(x.tanggal)}</Td><Td>{x.keperluan}</Td><Td>{x.tujuan}</Td>
-                <Td mono>{x.jamKeluar}</Td>
+                <Td mono>{x.jamKeluar}–{x.jamKembali}</Td>
                 <Td small>{at?.nama||"-"}</Td>
                 <Td><BadgeStatus s={x.status}/></Td>
               </tr>;
@@ -1130,7 +1159,7 @@ function App() {
     if (tab === "pegawai") return (
       <Card title="👥 Data Pegawai" noPad>
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-          <thead><tr><Th>#</Th><Th>Nama</Th><Th>NIP</Th><Th>Jabatan</Th><Th>Role</Th><Th>Password</Th><Th>Total Izin</Th><Th>Disetujui</Th></tr></thead>
+          <thead><tr><Th>#</Th><Th>Nama</Th><Th>NIP</Th><Th>Jabatan</Th><Th>Role</Th><Th>Total Izin</Th><Th>Disetujui</Th></tr></thead>
           <tbody>{USERS.map((u,i)=>{
             const my=db.izin.filter(x=>x.pegawaiId===u.id);
             return <tr key={u.id}>
@@ -1139,7 +1168,6 @@ function App() {
               <Td mono>{u.nip}</Td>
               <Td>{u.jabatan}</Td>
               <Td><span style={{...S.badge(u.role==="atasan"||u.role==="keduanya"?"disetujui":"menunggu")}}>{u.role==="admin"?"Admin":u.role==="keduanya"?"Pegawai + Atasan":u.role==="atasan"?"Atasan":"Pegawai"}</span></Td>
-              <Td mono>{u.pw}</Td>
               <Td>{my.length}</Td>
               <Td>{my.filter(x=>x.status==="disetujui").length}</Td>
             </tr>;
@@ -1284,6 +1312,7 @@ function App() {
                 <DR l={<IconLabel icon="approval" size={13}>Jabatan</IconLabel>} v={detailIzin.pegawaiJabatan}/>
                 <DR l={<IconLabel icon="calendar" size={13}>Tanggal</IconLabel>} v={fmtTgl(detailIzin.tanggal)}/>
                 <DR l={<IconLabel icon="clock" size={13}>Jam Keluar</IconLabel>} v={detailIzin.jamKeluar+" WIB"}/>
+                <DR l={<IconLabel icon="clock" size={13}>Est. Kembali</IconLabel>} v={detailIzin.jamKembali+" WIB"}/>
                 <DR l={<IconLabel icon="edit" size={13}>Keperluan</IconLabel>} v={detailIzin.keperluan}/>
                 <DR l={<IconLabel icon="mapPin" size={13}>Tujuan</IconLabel>} v={detailIzin.tujuan}/>
                 <DR l={<IconLabel icon="fileText" size={13}>Keterangan</IconLabel>} v={detailIzin.keterangan||"—"}/>
@@ -1485,7 +1514,7 @@ function ValidasiPublik({ izinId }) {
               <div style={row}><span style={{color:"#8a948e"}}>Nama</span><span style={{fontWeight:700}}>{state.data.pegawaiNama || "-"}</span></div>
               <div style={row}><span style={{color:"#8a948e"}}>Jabatan</span><span>{state.data.pegawaiJabatan || "-"}</span></div>
               <div style={row}><span style={{color:"#8a948e"}}>Tanggal</span><span>{fmtTgl(state.data.tanggal)}</span></div>
-              <div style={row}><span style={{color:"#8a948e"}}>Jam</span><span>{state.data.jamKeluar}</span></div>
+              <div style={row}><span style={{color:"#8a948e"}}>Jam</span><span>{state.data.jamKeluar} – {state.data.jamKembali}</span></div>
               <div style={row}><span style={{color:"#8a948e"}}>Keperluan</span><span>{state.data.keperluan || "-"}</span></div>
               <div style={{...row, borderBottom:"none"}}><span style={{color:"#8a948e"}}>Disetujui oleh</span><span style={{fontWeight:700}}>{state.data.disetujuiOleh || "-"}{state.data.disetujuiOlehJabatan ? ` (${state.data.disetujuiOlehJabatan})` : ""}</span></div>
             </div>
