@@ -954,8 +954,8 @@ function App() {
         <div style="font-size:10.5px;color:#444;">Dicetak otomatis melalui CABLAKA pada ${tglCetak} WIB</div>
         <div style="text-align:center;min-width:200px;">
           <p style="margin:0;">Purwokerto, ${tglSlash(today())}</p>
-          <p style="margin:0 0 55px;">Admin CABLAKA,</p>
-          <p style="margin:0;font-weight:700;text-decoration:underline;">${user?.nama||"-"}</p>
+          <p style="margin:0 0 55px;">Kepala Sub Bagian Kepegawaian dan Ortala,</p>
+          <p style="margin:0;font-weight:700;text-decoration:underline;">NUR KHAIRANI ZULFAH, S.T.</p>
         </div>
       </div>
     </div>`;
